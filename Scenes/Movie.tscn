@@ -1,3 +1,6 @@
-[gd_scene format=3 uid="uid://rifmn1nidhd1"]
+[gd_scene load_steps=2 format=3 uid="uid://rifmn1nidhd1"]
+
+[ext_resource type="Script" uid="uid://utnrqgctfl41" path="res://Scenes/movie.gd" id="1_qmis0"]
 
 [node name="Movie" type="Node3D"]
+script = ExtResource("1_qmis0")
