@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://bqetrehj0espp"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_w3hg6"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kr6cv"]
+
+[node name="Simple Facade" type="Node3D"]
+
+[node name="Facade" type="StaticBody3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Facade"]
+mesh = SubResource("QuadMesh_w3hg6")
+surface_material_override/0 = SubResource("StandardMaterial3D_kr6cv")
