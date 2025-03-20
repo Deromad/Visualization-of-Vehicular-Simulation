@@ -16,7 +16,7 @@ func on_files_dropped(files):
 
 		if valid_files.size() == 1:
 			var yaml_path = valid_files[0]
-			read_yaml(yaml_path)
+			change_scene(yaml_path)
 		elif valid_files.size() > 1:
 			print("Bitte nur eine YAML-Datei auf einmal ziehen!")
 		else:
@@ -24,9 +24,5 @@ func on_files_dropped(files):
 	else:
 		print("Drop außerhalb von FileLoader!")
 
-func read_yaml(file_path):
-	var data = YAMLLoader.load_file(file_path)
-	if YAMLLoader.last_error != null:
-		print("Error loading file: ", YAMLLoader.last_error)
-	else:
-		print(data[0]["meta"]["title"])
+func change_scene(file_path):
+	get_tree().change_scene_to_file("res://Scenes/Movie.tscn")
