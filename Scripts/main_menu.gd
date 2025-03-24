@@ -2,6 +2,8 @@ extends Control
 
 @onready var file_loader = $FileLoader  # Referenz auf den Unter-Node
 
+signal level_changed
+
 func _ready():
 	get_viewport().files_dropped.connect(on_files_dropped)
 
@@ -25,4 +27,5 @@ func on_files_dropped(files):
 		print("Drop außerhalb von FileLoader!")
 
 func change_scene(file_path):
-	get_tree().change_scene_to_file("res://Scenes/Movie.tscn")
+		Globals.path = file_path
+		get_tree().change_scene_to_file("res://Scenes/Movie.tscn")
