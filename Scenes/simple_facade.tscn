@@ -2,9 +2,11 @@
 
 [ext_resource type="Script" uid="uid://c0sdj5ujxcr5y" path="res://Scenes/simple_facade.gd" id="1_kr6cv"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_kr6cv"]
-
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kr6cv"]
+cull_mode = 2
+
+[sub_resource type="QuadMesh" id="QuadMesh_j7l64"]
+material = SubResource("StandardMaterial3D_kr6cv")
 
 [node name="Simple Facade" type="Node3D"]
 script = ExtResource("1_kr6cv")
@@ -13,5 +15,4 @@ script = ExtResource("1_kr6cv")
 
 [node name="Mesh" type="MeshInstance3D" parent="Facade"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.1, 0, 0, 0)
-mesh = SubResource("BoxMesh_kr6cv")
-surface_material_override/0 = SubResource("StandardMaterial3D_kr6cv")
+mesh = SubResource("QuadMesh_j7l64")
