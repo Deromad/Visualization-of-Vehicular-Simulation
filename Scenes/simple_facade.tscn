@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://bqetrehj0espp"]
 
-[ext_resource type="Script" uid="uid://c0sdj5ujxcr5y" path="res://Scenes/simple_facade.gd" id="1_kr6cv"]
+[ext_resource type="Script" uid="uid://c0sdj5ujxcr5y" path="res://Scripts/simple_facade.gd" id="1_kr6cv"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kr6cv"]
 cull_mode = 2

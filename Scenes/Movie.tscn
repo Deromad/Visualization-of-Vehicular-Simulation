@@ -1,9 +1,13 @@
-[gd_scene load_steps=6 format=3 uid="uid://rifmn1nidhd1"]
+[gd_scene load_steps=10 format=3 uid="uid://rifmn1nidhd1"]
 
 [ext_resource type="Script" uid="uid://utnrqgctfl41" path="res://Scripts/movie.gd" id="1_qmis0"]
-[ext_resource type="Script" uid="uid://6kgheggos2ui" path="res://Scenes/static_objects.gd" id="2_amsei"]
-[ext_resource type="Script" uid="uid://b2hmqjdt4xfiw" path="res://Scenes/building_2d_5.gd" id="3_uha0q"]
-[ext_resource type="Script" uid="uid://b8nb31hhopqv4" path="res://Scenes/camera_3d.gd" id="4_uha0q"]
+[ext_resource type="Script" uid="uid://6kgheggos2ui" path="res://Scripts/static_objects.gd" id="2_amsei"]
+[ext_resource type="Script" uid="uid://b2hmqjdt4xfiw" path="res://Scripts/building_2d_5.gd" id="3_uha0q"]
+[ext_resource type="Script" uid="uid://c0gintbdfdpij" path="res://Scripts/road.gd" id="4_a3nw1"]
+[ext_resource type="Script" uid="uid://bjyihgki73wdu" path="res://Scripts/junction.gd" id="4_jhqr3"]
+[ext_resource type="Script" uid="uid://b8nb31hhopqv4" path="res://Scripts/camera_3d.gd" id="4_uha0q"]
+[ext_resource type="Script" uid="uid://5bligna3bg7" path="res://Scripts/dynamic_objects.gd" id="6_poyp3"]
+[ext_resource type="Script" uid="uid://bqyb7x8quu0vu" path="res://Scripts/vehicles.gd" id="7_e34rv"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_uha0q"]
 
@@ -17,17 +21,27 @@ script = ExtResource("2_amsei")
 script = ExtResource("3_uha0q")
 
 [node name="Road" type="Node3D" parent="StaticObjects"]
+script = ExtResource("4_a3nw1")
+height = 0.0
 
 [node name="Junction" type="Node3D" parent="StaticObjects"]
+script = ExtResource("4_jhqr3")
+height = 0.01
 
 [node name="DynamicObjects" type="Node3D" parent="."]
+script = ExtResource("6_poyp3")
+
+[node name="Vehicles" type="Node3D" parent="DynamicObjects"]
+script = ExtResource("7_e34rv")
+
+[node name="RSU" type="Node3D" parent="DynamicObjects"]
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(0.998335, 0.00404082, -0.0575394, 0.0504647, 0.42194, 0.905218, 0.027936, -0.906615, 0.421033, 0, 509.594, 934.603)
+transform = Transform3D(0.998335, 0.00404082, -0.0575394, 0.0504647, 0.42194, 0.905218, 0.027936, -0.906615, 0.421033, 2600, 200, 1600)
 script = ExtResource("4_uha0q")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
-transform = Transform3D(10000, 0, 0, 0, 10000, 0, 0, 0, 10000, 0, 0, 0)
+transform = Transform3D(10000, 0, 0, 0, 10000, 0, 0, 0, 10000, 0, -0.1, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
 mesh = SubResource("PlaneMesh_uha0q")
