@@ -1,0 +1,171 @@
+[gd_scene load_steps=14 format=3 uid="uid://rifmn1nidhd1"]
+
+[ext_resource type="Script" uid="uid://utnrqgctfl41" path="res://Icons/Scripts/movie.gd" id="1_qmis0"]
+[ext_resource type="Script" uid="uid://6kgheggos2ui" path="res://Icons/Scripts/static_objects.gd" id="2_amsei"]
+[ext_resource type="Script" uid="uid://b2hmqjdt4xfiw" path="res://Icons/Scripts/building_2d_5.gd" id="3_uha0q"]
+[ext_resource type="Script" uid="uid://c0gintbdfdpij" path="res://Icons/Scripts/road.gd" id="4_a3nw1"]
+[ext_resource type="Script" uid="uid://bjyihgki73wdu" path="res://Icons/Scripts/junction.gd" id="4_jhqr3"]
+[ext_resource type="Script" uid="uid://b8nb31hhopqv4" path="res://Icons/Scripts/camera_3d.gd" id="4_uha0q"]
+[ext_resource type="Script" uid="uid://5bligna3bg7" path="res://Icons/Scripts/dynamic_objects.gd" id="6_poyp3"]
+[ext_resource type="Script" uid="uid://bqyb7x8quu0vu" path="res://Icons/Scripts/vehicles.gd" id="7_e34rv"]
+[ext_resource type="Script" uid="uid://dbjuptyvexbvv" path="res://Icons/Scripts/h_slider.gd" id="9_5coti"]
+[ext_resource type="Texture2D" uid="uid://cjq7pabh00k5i" path="res://Icons/play-svgrepo-com.svg" id="9_ohy1f"]
+[ext_resource type="Texture2D" uid="uid://cdq18rgyb8oh5" path="res://Icons/minus-svgrepo-com.svg" id="10_c0rc2"]
+[ext_resource type="Texture2D" uid="uid://bts04p8ia31b1" path="res://Icons/plus-svgrepo-com.svg" id="11_klp4n"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_uha0q"]
+
+[node name="Movie" type="Node3D"]
+script = ExtResource("1_qmis0")
+
+[node name="StaticObjects" type="Node3D" parent="."]
+script = ExtResource("2_amsei")
+
+[node name="Building2d5" type="Node3D" parent="StaticObjects"]
+script = ExtResource("3_uha0q")
+
+[node name="Road" type="Node3D" parent="StaticObjects"]
+script = ExtResource("4_a3nw1")
+height = 0.0
+
+[node name="Junction" type="Node3D" parent="StaticObjects"]
+script = ExtResource("4_jhqr3")
+height = 0.01
+
+[node name="DynamicObjects" type="Node3D" parent="."]
+script = ExtResource("6_poyp3")
+
+[node name="Vehicles" type="Node3D" parent="DynamicObjects"]
+script = ExtResource("7_e34rv")
+
+[node name="RSU" type="Node3D" parent="DynamicObjects"]
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.998335, 0.00404082, -0.0575394, 0.0504647, 0.42194, 0.905218, 0.027936, -0.906615, 0.421033, 2600, 200, 1600)
+script = ExtResource("4_uha0q")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+transform = Transform3D(10000, 0, 0, 0, 10000, 0, 0, 0, 10000, 0, -0.1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+mesh = SubResource("PlaneMesh_uha0q")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.716107, -0.69799, 0, 0.148598, 0.152455, 0.977075, -0.681989, -0.699691, 0.212894, 0, 30.4258, 0)
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Play" type="Button" parent="UI"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -17.5
+offset_top = -48.0
+offset_right = 17.5
+offset_bottom = -13.0
+grow_horizontal = 2
+grow_vertical = 0
+icon = ExtResource("9_ohy1f")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Back" type="Button" parent="UI"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -476.0
+offset_top = -48.0
+offset_right = -441.0
+offset_bottom = -13.0
+grow_horizontal = 2
+grow_vertical = 0
+icon = ExtResource("10_c0rc2")
+expand_icon = true
+
+[node name="Forward" type="Button" parent="UI"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -426.0
+offset_top = -48.0
+offset_right = -391.0
+offset_bottom = -13.0
+grow_horizontal = 2
+grow_vertical = 0
+icon = ExtResource("11_klp4n")
+expand_icon = true
+
+[node name="HSlider" type="HSlider" parent="UI"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -481.0
+offset_top = -80.0
+offset_right = 481.0
+offset_bottom = -64.0
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("9_5coti")
+
+[node name="Speed" type="HSlider" parent="UI"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 324.0
+offset_top = -38.0
+offset_right = 470.0
+offset_bottom = -22.0
+grow_horizontal = 2
+grow_vertical = 0
+min_value = -9.0
+max_value = 9.0
+
+[node name="SpeedLabel" type="RichTextLabel" parent="UI"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 245.0
+offset_top = -42.0
+offset_right = 315.0
+offset_bottom = -2.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/table_border = Color(0, 0, 0, 1)
+theme_override_colors/table_even_row_bg = Color(0, 0, 0, 1)
+theme_override_colors/table_odd_row_bg = Color(0, 0, 0, 1)
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_colors/font_selected_color = Color(0, 0, 0, 1)
+text = "1x"
+fit_content = true
+scroll_active = false
+text_direction = 2
+
+[connection signal="pressed" from="UI/Play" to="DynamicObjects" method="_on_play_pressed"]
+[connection signal="pressed" from="UI/Back" to="DynamicObjects" method="_on_back_pressed"]
+[connection signal="pressed" from="UI/Forward" to="DynamicObjects" method="_on_forward_pressed"]
+[connection signal="value_changed" from="UI/HSlider" to="DynamicObjects" method="_on_h_slider_value_changed"]
+[connection signal="value_changed" from="UI/Speed" to="DynamicObjects" method="_on_speed_value_changed"]

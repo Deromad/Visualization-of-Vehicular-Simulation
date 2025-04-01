@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3 uid="uid://b8llgo3cetik8"]
+
+[ext_resource type="Script" uid="uid://csclusb0xk03o" path="res://Icons/Scripts/passenger.gd" id="1_plka5"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lyrvh"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_uumvl"]
+material = SubResource("StandardMaterial3D_lyrvh")
+
+[node name="Passenger" type="Node3D"]
+script = ExtResource("1_plka5")
+
+[node name="Cube" type="StaticBody3D" parent="."]
+
+[node name="Mesh" type="MeshInstance3D" parent="Cube"]
+mesh = SubResource("BoxMesh_uumvl")
