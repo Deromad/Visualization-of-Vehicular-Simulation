@@ -13,11 +13,11 @@ config_version=5
 config/name="Movie ab"
 run/main_scene="uid://ba0es51apofms"
 config/features=PackedStringArray("4.4", "C#", "Forward Plus")
-config/icon="res://icon.svg"
+config/icon="res://Icons/icon.svg"
 
 [autoload]
 
-Globals="*res://Scripts/globals.gd"
+Globals="*res://Icons/Scripts/globals.gd"
 
 [dotnet]
 
@@ -25,4 +25,4 @@ project/assembly_name="Movie ab"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/yaml/plugin.cfg")
+enabled=PackedStringArray()
