@@ -15,12 +15,14 @@ var speed = 1.0
 @onready var slide = $"../UI/HSlider"
 @onready var vehicle = $Vehicles
 @onready var speed_label = $"../UI/SpeedLabel"
+@onready var time_label = $"../UI/Time"
 
 
 func create_dynamic_onjects(data):
 	var rsus = []
 	var vehicles = []
 	var vehicle_update = []
+	var vehicle_removal= []
 	var first = true
 	var second = false
 	for item in data:
@@ -43,14 +45,20 @@ func create_dynamic_onjects(data):
 						second = false
 				"timestepEnd":
 					time_end = item["t"]
+				
+				"vehicleRemoval":
+					vehicle_removal.append(item)
+					
 					
 				
 
 	time_frame = time_end-time_begin
 
 	var rsu = $RSU
+	
 	vehicle.create_vehicles(vehicles)
 	vehicle.add_timestemps(vehicle_update)
+	vehicle.remove_vehicles(vehicle_removal)
 	player(time_begin, time_end)
 	
 	
@@ -60,9 +68,10 @@ func player(start_time: float, end_time:float):
 	while true:
 		while time <= end_time and is_playing:
 			update(time)
-			print(time)
-			time = snapped(time+tick_time, tick_time)
 			await get_tree().create_timer(tick_time / speed).timeout
+			if is_playing:
+				time = snapped(time+tick_time, tick_time)
+
 		is_playing = false
 		await get_tree().create_timer(0.05).timeout
 
@@ -71,11 +80,14 @@ func player(start_time: float, end_time:float):
 func update(time: float):
 	vehicle.set_to_time(str(time))
 	last_time = time
+	time_label.text = str(time) + " / " + str(time_end)
+
 	slide.set_value_no_signal(time/time_frame * 100) 
 
 func update_backward(time:float):
 	vehicle.set_to_time_backwards(str(time))
 	last_time = time
+	time_label.text = str(time) + "/" + str(time_end)
 	slide.set_value_no_signal(time/time_frame * 100) 
 
 
@@ -99,10 +111,11 @@ func _on_forward_pressed() -> void:
 func _on_h_slider_value_changed(value: float) -> void:
 	is_playing = false
 	time = snapped(value /100 *time_frame,tick_time)
-	if last_time > time:
-		update_backward(time)
-	else:
-		update(time)
+	
+	#this function because its possible, because if you jump to a tick where 
+	#the object is already removed, it would not change its visibility
+	update_backward(time)
+	
 
 	
 

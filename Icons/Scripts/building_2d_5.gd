@@ -21,7 +21,7 @@ func create_building2d5(data):
 		#get infos from the yaml input
 		var shape_points = house["shape"]
 		var color_dic = house["color"]
-		var color = Color.from_rgba8(color_dic["r"], color_dic["g"], color_dic["b"])
+		var color = Color.from_rgba8(color_dic["r"], color_dic["g"], color_dic["b"], color_dic["a"])
 		var name = house["id"]
 		
 		#for each edge of the building create a wall and a roof

@@ -41,7 +41,7 @@ script = ExtResource("7_e34rv")
 [node name="RSU" type="Node3D" parent="DynamicObjects"]
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(0.998335, 0.00404082, -0.0575394, 0.0504647, 0.42194, 0.905218, 0.027936, -0.906615, 0.421033, 2600, 200, 1600)
+transform = Transform3D(0.998335, 0.00404082, -0.0575394, 0.0504647, 0.42194, 0.905218, 0.027936, -0.906615, 0.421033, 0, 200, 0)
 script = ExtResource("4_uha0q")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
@@ -163,6 +163,36 @@ text = "1x"
 fit_content = true
 scroll_active = false
 text_direction = 2
+
+[node name="Time" type="RichTextLabel" parent="UI"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -369.0
+offset_top = -42.0
+offset_right = -217.0
+offset_bottom = -19.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+text = "0.0 / 10.0"
+
+[node name="Koordinaten" type="RichTextLabel" parent="UI"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -267.0
+offset_top = 34.0
+offset_right = -56.0
+offset_bottom = 74.0
+grow_horizontal = 0
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+text = "x:100, y:100, z: 100"
+horizontal_alignment = 2
 
 [connection signal="pressed" from="UI/Play" to="DynamicObjects" method="_on_play_pressed"]
 [connection signal="pressed" from="UI/Back" to="DynamicObjects" method="_on_back_pressed"]

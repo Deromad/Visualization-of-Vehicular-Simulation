@@ -4,6 +4,7 @@ class_name FreeLookCamera extends Camera3D
 const SHIFT_MULTIPLIER = 6
 const ALT_MULTIPLIER = 1.0 / SHIFT_MULTIPLIER
 
+@onready var koord = $"../UI/Koordinaten"
 
 @export_range(0.0, 1.0) var sensitivity: float = 0.25
 
@@ -97,6 +98,7 @@ func _update_movement(delta):
 		_velocity.z = clamp(_velocity.z + offset.z, -_vel_multiplier, _vel_multiplier)
 	
 		translate(_velocity * delta * speed_multi)
+		koord.text = "x:" + str(snapped(self.position.x, 0.1)) + ", y:" + str(snapped(self.position.z, 0.1)) + ", z:" + str(snapped(self.position.y, 0.1))
 
 # Updates mouse look 
 func _update_mouselook():
