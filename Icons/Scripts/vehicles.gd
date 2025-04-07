@@ -21,7 +21,7 @@ func create_vehicles(data):
 		var heading_angle = -Vector2(vehicle["heading"]["x"], vehicle["heading"]["y"]).angle()
 		#var startpos = Vector3(vehicle["pos"]["x"], height / 2 ,vehicle["pos"]["y"])
 
-		var startpos = get_cood_of_Vehicle(heading_angle, dimensions, Vector3(vehicle["pos"]["x"], height / 2 ,vehicle["pos"]["y"]))
+		var startpos = Vector3(vehicle["pos"]["x"], height / 2 ,vehicle["pos"]["y"])
 
 		#create an instandce for a vehicle
 		var vehicle_instance = VehicleScene.instantiate()
@@ -58,7 +58,7 @@ func add_timestemps(data):
 		var heading_angle = -Vector2(update["heading"]["x"], update["heading"]["y"]).angle()
 		#var startpos = Vector3(update["pos"]["x"], height / 2 ,update["pos"]["y"])
 
-		var startpos = get_cood_of_Vehicle(heading_angle, dimensions, Vector3(update["pos"]["x"], height / 2 ,update["pos"]["y"]))
+		var startpos =Vector3(update["pos"]["x"], height / 2 ,update["pos"]["y"])
 
 		if all_vehicles.has(t):
 			all_vehicles[t]["update"].append({"id": v_id, "pos": startpos, "angle": heading_angle})
@@ -77,7 +77,6 @@ func set_to_time(time: String):
 		var dic = all_vehicles_meta[v_id]
 		var instance  = dic["instance"]
 		instance.visible = true
-		print("asd")
 		instance.global_position = vehicle["pos"]
 
 	for vehicle in timeste["update"]:
@@ -133,14 +132,48 @@ func remove_vehicles(data):
 			all_vehicles_meta[remove["id"]]["remove_at"] = remove["t"]
 		
 
-func get_cood_of_Vehicle(angle: float, dim: Vector3, pos: Vector3) -> Vector3:
-	var norm_dir = -Vector2(cos(angle), sin(angle))
-	var pos_2d = Vector2(pos.x, pos.z)
-	var final_pos = (norm_dir * dim.x / 2 )  + pos_2d
-	print(pos)
-	print(dim)
-	print(norm_dir)
-	print(final_pos)
-	return Vector3(final_pos.x, dim.y / 2, final_pos.y)
+func get_all_pos(id:String, start: float, end:float, dic: Dictionary) -> void:
+	var res = PackedVector3Array()
+
+	var has_first = false
+	var first_b = true
+	var str_start = str(start)
+	
+	if all_vehicles.has(start):					
+		for vehec in all_vehicles[start]:
+			if vehec["id"] == id:
+				has_first = true
+				if not dic.has(str_start):
+					dic[str_start] = []
+				dic[str_start].append({"id": id, "pos": vehec["pos"]})
+				
+	if not has_first:
+		if not dic.has(str_start):
+			dic[str_start] = []
+		dic[str_start].append({"id": id, "pos": get_last_pos(start, id)})
+	
+	for key in all_vehicles.keys():
 		
+		if all_vehicles[key]["id"] == id:
+			if float(key)  <= end and float(key) > start:
+				res.append(all_vehicles[key]["pos"])
+		
+
+
+
+func get_last_pos(time: float, id:String)-> Vector3:
+	var distance = 1
+	var res = Vector3(0,0,0)
+	for key in all_vehicles.keys():
+		if float(key) < time:
+			for vehec in all_vehicles[key]:
+				if vehec["id"] == id and distance > float(key)-time:
+					distance = float(key)-time
+					res = vehec["pos"]
+	return res
+					
+					
+	
+				
+					
 		

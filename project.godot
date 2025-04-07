@@ -26,3 +26,7 @@ project/assembly_name="Movie ab"
 [editor_plugins]
 
 enabled=PackedStringArray()
+
+[filesystem]
+
+import/blender/enabled=false

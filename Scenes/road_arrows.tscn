@@ -1,0 +1,23 @@
+[gd_scene load_steps=5 format=3 uid="uid://bymwkdyx8yge1"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_5gylk"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5gylk"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cueoj"]
+
+[sub_resource type="PrismMesh" id="PrismMesh_cueoj"]
+
+[node name="RoadArrows" type="Node3D"]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+transform = Transform3D(0.128045, 0, 0, 0, 1.00254, 0, 0, 0, 0.788213, -0.00267029, 0.000665665, 0.194487)
+mesh = SubResource("PlaneMesh_5gylk")
+surface_material_override/0 = SubResource("StandardMaterial3D_5gylk")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="StaticBody3D"]
+transform = Transform3D(0.6, 0, 0, 0, -1.74846e-08, 0.01, 0, -0.4, -4.37114e-10, 0, 0, -0.794403)
+material_override = SubResource("StandardMaterial3D_cueoj")
+mesh = SubResource("PrismMesh_cueoj")

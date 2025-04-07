@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://cesn0esnuvxql"]
+
+[ext_resource type="PackedScene" uid="uid://dw6rtmsl61wri" path="res://Models/ArrowStraight.glb" id="1_ei33o"]
+
+[node name="ArrowStraight" instance=ExtResource("1_ei33o")]
+transform = Transform3D(0.749829, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+
+[node name="Plane" parent="." index="0"]
+transform = Transform3D(0.130716, 0, 0, 0, 1, 0, 0, 0, 0.887054, 0, 0, -0.896441)
+
+[node name="Plane_001" parent="." index="1"]
+transform = Transform3D(0.326317, 0, 0, 0, 1, 0, 0, 0, 0.141921, 0, 0, -1.85109)
