@@ -15,8 +15,12 @@ var timesteps = []
 var pos_of_timesteps = 0
 var len_of_timesteps = 0
 
+var batchsize = 500
+var back_batchsize = 100
+
 @onready var slide = $"../UI/HSlider"
 @onready var vehicle = $Vehicles
+@onready var connector = $Connector
 @onready var speed_label = $"../UI/SpeedLabel"
 @onready var time_label = $"../UI/Time"
 
@@ -26,6 +30,8 @@ func create_dynamic_onjects(data):
 	var vehicles = []
 	var vehicle_update = []
 	var vehicle_removal= []
+	var connector_addition = []
+	var connector_removal = []
 	var first = true
 	var second = false
 	var bla = {}
@@ -46,13 +52,15 @@ func create_dynamic_onjects(data):
 				"vehicleRemoval":
 					vehicle_removal.append(item)
 				"connectorAddition":
+					connector_addition.append(item)
+				"connectorRemoval":
+					connector_removal.append(item)
 					
 	time_begin = timesteps[0]
 	time_end = timesteps[-1]
 	len_of_timesteps = len(timesteps)
 	
-	for i in timesteps:
-		print(i)
+
 
 	time_frame = time_end-time_begin
 
@@ -61,6 +69,9 @@ func create_dynamic_onjects(data):
 	vehicle.create_vehicles(vehicles)
 	vehicle.add_timestemps(vehicle_update)
 	vehicle.remove_vehicles(vehicle_removal)
+	
+	connector.create_connector(connector_addition, connector_removal, time_end)
+	
 	player(time_begin, time_end)
 	
 	
@@ -84,16 +95,21 @@ func player(start_time: float, end_time:float):
 	
 
 func update(time: float):
-	vehicle.set_to_time(str(time))
+	var str_time = str(time)
+	vehicle.set_to_time(str_time)
+	connector.update_connector(str_time)
 	last_time = time
-	time_label.text = str(time) + " / " + str(time_end)
+	time_label.text = str_time + " / " + str(time_end)
 
 	slide.set_value_no_signal(time/time_frame * 100) 
 
 func update_backward(time:float):
-	vehicle.set_to_time_backwards(str(time))
+	var str_time = str(time)
+
+	vehicle.set_to_time_backwards(str_time)
+	connector.update_connector_backwards(str_time)
 	last_time = time
-	time_label.text = str(time) + "/" + str(time_end)
+	time_label.text = str_time + "/" + str(time_end)
 	slide.set_value_no_signal(time/time_frame * 100) 
 
 

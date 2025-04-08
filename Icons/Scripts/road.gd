@@ -63,7 +63,6 @@ func create_roads(data):
 			else:
 				lines.append(create_road(width, shape_points, name, false, color)[0])
 			
-			print(directions)
 			add_arrow(directions, shape_points[-2], shape_points[-1])
 			first = false
 		

@@ -131,47 +131,15 @@ func remove_vehicles(data):
 			all_vehicles_meta[remove["id"]] = {}
 			all_vehicles_meta[remove["id"]]["remove_at"] = remove["t"]
 		
+func get_pos(id:String)-> Vector3:
+	if all_vehicles_meta.has(id) :
+		return all_vehicles_meta[id]["instance"].global_position
+	return Vector3(0,0,0)
 
-func get_all_pos(id:String, start: float, end:float, dic: Dictionary) -> void:
-	var res = PackedVector3Array()
-
-	var has_first = false
-	var first_b = true
-	var str_start = str(start)
-	
-	if all_vehicles.has(start):					
-		for vehec in all_vehicles[start]:
-			if vehec["id"] == id:
-				has_first = true
-				if not dic.has(str_start):
-					dic[str_start] = []
-				dic[str_start].append({"id": id, "pos": vehec["pos"]})
-				
-	if not has_first:
-		if not dic.has(str_start):
-			dic[str_start] = []
-		dic[str_start].append({"id": id, "pos": get_last_pos(start, id)})
-	
-	for key in all_vehicles.keys():
-		
-		if all_vehicles[key]["id"] == id:
-			if float(key)  <= end and float(key) > start:
-				res.append(all_vehicles[key]["pos"])
-		
-
-
-
-func get_last_pos(time: float, id:String)-> Vector3:
-	var distance = 1
-	var res = Vector3(0,0,0)
-	for key in all_vehicles.keys():
-		if float(key) < time:
-			for vehec in all_vehicles[key]:
-				if vehec["id"] == id and distance > float(key)-time:
-					distance = float(key)-time
-					res = vehec["pos"]
-	return res
-					
+func is_there(id:String)->bool:
+	if all_vehicles_meta.has(id) and all_vehicles_meta[id]["instance"].visible:
+		return true
+	return false			
 					
 	
 				
