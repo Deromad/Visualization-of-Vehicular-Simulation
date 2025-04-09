@@ -1,6 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://02mu0gme53wd"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_01kji"]
+albedo_color = Color(0.529412, 0.172549, 0.113725, 0.333333)
 
 [sub_resource type="BoxMesh" id="BoxMesh_k5fym"]
 material = SubResource("StandardMaterial3D_01kji")
@@ -8,5 +9,5 @@ material = SubResource("StandardMaterial3D_01kji")
 [node name="Connector" type="Node3D"]
 
 [node name="Conn" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.33, 0, 0, 0, 0.33, 0, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 0.156, 0, 0, 0, 0.15, 0, 0, 0)
 mesh = SubResource("BoxMesh_k5fym")

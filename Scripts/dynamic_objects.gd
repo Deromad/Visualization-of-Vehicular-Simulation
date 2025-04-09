@@ -21,6 +21,7 @@ var back_batchsize = 100
 @onready var slide = $"../UI/HSlider"
 @onready var vehicle = $Vehicles
 @onready var connector = $Connector
+@onready var emoji = $Emoji 
 @onready var speed_label = $"../UI/SpeedLabel"
 @onready var time_label = $"../UI/Time"
 
@@ -32,6 +33,8 @@ func create_dynamic_onjects(data):
 	var vehicle_removal= []
 	var connector_addition = []
 	var connector_removal = []
+	var emoji_addition = []
+	var emoji_removal = []
 	var first = true
 	var second = false
 	var bla = {}
@@ -55,6 +58,11 @@ func create_dynamic_onjects(data):
 					connector_addition.append(item)
 				"connectorRemoval":
 					connector_removal.append(item)
+				"emojiAddition":
+					emoji_addition.append(item)
+				"emojiRemoval":
+					emoji_removal.append(item)
+					
 					
 	time_begin = timesteps[0]
 	time_end = timesteps[-1]
@@ -70,7 +78,10 @@ func create_dynamic_onjects(data):
 	vehicle.add_timestemps(vehicle_update)
 	vehicle.remove_vehicles(vehicle_removal)
 	
+	
 	connector.create_connector(connector_addition, connector_removal, time_end)
+	
+	emoji.create_emoji(emoji_addition, emoji_removal, time_end)
 	
 	player(time_begin, time_end)
 	
@@ -98,6 +109,7 @@ func update(time: float):
 	var str_time = str(time)
 	vehicle.set_to_time(str_time)
 	connector.update_connector(str_time)
+	emoji.update_emoji(str_time)
 	last_time = time
 	time_label.text = str_time + " / " + str(time_end)
 
@@ -108,6 +120,7 @@ func update_backward(time:float):
 
 	vehicle.set_to_time_backwards(str_time)
 	connector.update_connector_backwards(str_time)
+	emoji.update_emoji_backwards(str_time)
 	last_time = time
 	time_label.text = str_time + "/" + str(time_end)
 	slide.set_value_no_signal(time/time_frame * 100) 

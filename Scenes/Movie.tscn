@@ -1,17 +1,19 @@
-[gd_scene load_steps=15 format=3 uid="uid://rifmn1nidhd1"]
+[gd_scene load_steps=17 format=3 uid="uid://rifmn1nidhd1"]
 
-[ext_resource type="Script" uid="uid://utnrqgctfl41" path="res://Icons/Scripts/movie.gd" id="1_qmis0"]
-[ext_resource type="Script" uid="uid://6kgheggos2ui" path="res://Icons/Scripts/static_objects.gd" id="2_amsei"]
-[ext_resource type="Script" uid="uid://b2hmqjdt4xfiw" path="res://Icons/Scripts/building_2d_5.gd" id="3_uha0q"]
-[ext_resource type="Script" uid="uid://c0gintbdfdpij" path="res://Icons/Scripts/road.gd" id="4_a3nw1"]
-[ext_resource type="Script" uid="uid://bjyihgki73wdu" path="res://Icons/Scripts/junction.gd" id="4_jhqr3"]
-[ext_resource type="Script" uid="uid://b8nb31hhopqv4" path="res://Icons/Scripts/camera_3d.gd" id="4_uha0q"]
-[ext_resource type="Script" uid="uid://5bligna3bg7" path="res://Icons/Scripts/dynamic_objects.gd" id="6_poyp3"]
-[ext_resource type="Script" uid="uid://bqyb7x8quu0vu" path="res://Icons/Scripts/vehicles.gd" id="7_e34rv"]
-[ext_resource type="Script" uid="uid://ck0s5lwsc6a5" path="res://Scenes/connector.gd" id="8_klp4n"]
-[ext_resource type="Script" uid="uid://dbjuptyvexbvv" path="res://Icons/Scripts/h_slider.gd" id="9_5coti"]
+[ext_resource type="Script" uid="uid://utnrqgctfl41" path="res://Scripts/movie.gd" id="1_qmis0"]
+[ext_resource type="Script" uid="uid://6kgheggos2ui" path="res://Scripts/static_objects.gd" id="2_amsei"]
+[ext_resource type="Script" uid="uid://b2hmqjdt4xfiw" path="res://Scripts/building_2d_5.gd" id="3_uha0q"]
+[ext_resource type="Script" uid="uid://c0gintbdfdpij" path="res://Scripts/road.gd" id="4_a3nw1"]
+[ext_resource type="Script" uid="uid://bjyihgki73wdu" path="res://Scripts/junction.gd" id="4_jhqr3"]
+[ext_resource type="Script" uid="uid://b8nb31hhopqv4" path="res://Scripts/camera_3d.gd" id="4_uha0q"]
+[ext_resource type="Script" uid="uid://5bligna3bg7" path="res://Scripts/dynamic_objects.gd" id="6_poyp3"]
+[ext_resource type="Script" uid="uid://bqyb7x8quu0vu" path="res://Scripts/vehicles.gd" id="7_e34rv"]
+[ext_resource type="Script" uid="uid://ck0s5lwsc6a5" path="res://Scripts/connector.gd" id="8_klp4n"]
+[ext_resource type="Script" uid="uid://dbjuptyvexbvv" path="res://Scripts/h_slider.gd" id="9_5coti"]
+[ext_resource type="Script" uid="uid://do1vdvw1jh2td" path="res://Scripts/emoji.gd" id="9_g6ygf"]
 [ext_resource type="Texture2D" uid="uid://cjq7pabh00k5i" path="res://Icons/play-svgrepo-com.svg" id="9_ohy1f"]
 [ext_resource type="Texture2D" uid="uid://cdq18rgyb8oh5" path="res://Icons/minus-svgrepo-com.svg" id="10_c0rc2"]
+[ext_resource type="Script" uid="uid://vel2fykixli0" path="res://Scenes/log_daten.gd" id="10_eoa1l"]
 [ext_resource type="Texture2D" uid="uid://bts04p8ia31b1" path="res://Icons/plus-svgrepo-com.svg" id="11_klp4n"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_uha0q"]
@@ -43,6 +45,12 @@ script = ExtResource("7_e34rv")
 
 [node name="Connector" type="Node3D" parent="DynamicObjects"]
 script = ExtResource("8_klp4n")
+
+[node name="Emoji" type="Node3D" parent="DynamicObjects"]
+script = ExtResource("9_g6ygf")
+
+[node name="LogDaten" type="Node3D" parent="DynamicObjects"]
+script = ExtResource("10_eoa1l")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(0.998335, 0.00404082, -0.0575394, 0.0504647, 0.42194, 0.905218, 0.027936, -0.906615, 0.421033, 0, 200, 0)
@@ -197,6 +205,16 @@ grow_horizontal = 0
 theme_override_colors/default_color = Color(0, 0, 0, 1)
 text = "x:100, y:100, z: 100"
 horizontal_alignment = 2
+
+[node name="LogPanel" type="Panel" parent="UI"]
+layout_mode = 0
+offset_right = 374.0
+offset_bottom = 139.0
+
+[node name="Daten" type="RichTextLabel" parent="UI/LogPanel"]
+layout_mode = 0
+offset_right = 374.0
+offset_bottom = 140.0
 
 [connection signal="pressed" from="UI/Play" to="DynamicObjects" method="_on_play_pressed"]
 [connection signal="pressed" from="UI/Back" to="DynamicObjects" method="_on_back_pressed"]

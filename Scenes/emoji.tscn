@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://b7i2a6prl3vqn"]
+
+[ext_resource type="Script" uid="uid://nekrgl0gg88l" path="res://Scripts/emojiin.gd" id="1_isu3s"]
+
+[node name="Emoji" type="Node3D"]
+script = ExtResource("1_isu3s")
+
+[node name="Label3D" type="Label3D" parent="."]
+font_size = 500

@@ -1,9 +1,10 @@
 [gd_scene load_steps=5 format=3 uid="uid://choyvwqficb43"]
 
-[ext_resource type="Script" uid="uid://dbjuptyvexbvv" path="res://Icons/Scripts/h_slider.gd" id="1_jxero"]
-[ext_resource type="Script" uid="uid://dmqnwghh6xvji" path="res://Icons/Scripts/ui.gd" id="1_qdvrb"]
+[ext_resource type="Script" uid="uid://dbjuptyvexbvv" path="res://Scripts/h_slider.gd" id="1_jxero"]
+[ext_resource type="Script" uid="uid://dmqnwghh6xvji" path="res://Scripts/ui.gd" id="1_qdvrb"]
 [ext_resource type="Texture2D" uid="uid://cdq18rgyb8oh5" path="res://Icons/minus-svgrepo-com.svg" id="3_2246s"]
 [ext_resource type="Texture2D" uid="uid://bts04p8ia31b1" path="res://Icons/plus-svgrepo-com.svg" id="4_q7pk6"]
+
 
 [node name="Control" type="Control"]
 layout_mode = 3

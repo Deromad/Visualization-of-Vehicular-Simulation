@@ -7,7 +7,7 @@ var all_connections = []
 var all_connections_meta = []
 var all_connections_meta_pos = 0
 var len_all_meta_connections = 0
-var node = Node3D
+var look_back = 2.0
 
 func create_connector(additions, removes, end_time):
 
@@ -26,8 +26,8 @@ func create_connector(additions, removes, end_time):
 			i["end"] = end_time
 	
 	len_all_meta_connections = len(all_connections_meta)
+	
 func update_connector(time:String):
-	print(all_connections_meta_pos)
 	var f_time = float(time)
 
 	while all_connections_meta_pos < len_all_meta_connections and all_connections_meta[all_connections_meta_pos]["start"] <= f_time:
@@ -38,22 +38,20 @@ func update_connector(time:String):
 		all_connections.append(arr)
 		all_connections_meta_pos += 1
 	
-	for con in all_connections:
-		
+	for i in range(all_connections.size() - 1, -1, -1):
+		var con = all_connections[i]
 		if con[2] < f_time or not vehicles.is_there(con[0]) or not vehicles.is_there(con[1]):
-			print(con[2])
 			con[3].queue_free()
-			all_connections.erase(con)
+			all_connections.remove_at(i)
 		else:
-			var from =  vehicles.get_pos(con[0])
+			var from = vehicles.get_pos(con[0])
 			var to = vehicles.get_pos(con[1])
 			var ins = con[3]
-			
-			var vec = to-from
-			#transform the arrow
-			ins.global_position = (from + to) /2
-			ins.scale = Vector3(vec.length(),1 , 1)
-			ins.global_rotation = Vector3(0, - Vector2(vec.x, vec.z).angle(), 0)
+
+			var vec = to - from
+			ins.global_position = (from + to) / 2
+			ins.scale = Vector3(vec.length(), 1, 1)
+			ins.global_rotation = Vector3(0, -Vector2(vec.x, vec.z).angle(), 0)
 			
 	
 func instantiate_con(info:Array):
@@ -71,14 +69,37 @@ func instantiate_con(info:Array):
 	
 	return connection
 func update_connector_backwards(time:String):
+
 	var f_time = float(time)
-	while not all_connections.is_empty():
-		for i in all_connections:
-			i[3].queue_free()
-			all_connections.erase(i)
-	
+	for i in range(all_connections.size() - 1, -1, -1):
+		all_connections[i][3].queue_free()
 	all_connections = []
-	print("asd")
-	while all_connections_meta_pos > 0 and all_connections_meta[all_connections_meta_pos]["start"] >= f_time:
+	if all_connections_meta_pos == len_all_meta_connections:
 		all_connections_meta_pos -= 1
-	update_connector(time)
+	while all_connections_meta_pos > 0  and all_connections_meta[all_connections_meta_pos]["start"] >= f_time-look_back:
+		all_connections_meta_pos -= 1
+
+
+	while  all_connections_meta[all_connections_meta_pos]["start"] <= f_time :
+		if all_connections_meta[all_connections_meta_pos]["end"] >= f_time:
+			var this_con = all_connections_meta[all_connections_meta_pos]
+			var arr = [this_con["from"], this_con["to"], this_con["end"]]
+			arr.append(instantiate_con(arr))
+			all_connections.append(arr)
+		all_connections_meta_pos += 1
+
+	for i in range(all_connections.size() - 1, -1, -1):
+		var con = all_connections[i]
+		if con[2] < f_time or not vehicles.is_there(con[0]) or not vehicles.is_there(con[1]):
+			con[3].queue_free()
+			all_connections.remove_at(i)
+		else:
+			var from = vehicles.get_pos(con[0])
+			var to = vehicles.get_pos(con[1])
+			var ins = con[3]
+
+			var vec = to - from
+			ins.global_position = (from + to) / 2
+			ins.scale = Vector3(vec.length(), 1, 1)
+			ins.global_rotation = Vector3(0, -Vector2(vec.x, vec.z).angle(), 0)
+			
