@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://d03uvsys8nj45"]
+
+[ext_resource type="Script" uid="uid://cb0qsdbgtvc0u" path="res://Scripts/traffic_lights.gd" id="1_tmwn3"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_glmt6"]
+
+[node name="TrafficLight" type="Node3D"]
+script = ExtResource("1_tmwn3")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 1)
+mesh = SubResource("PlaneMesh_glmt6")

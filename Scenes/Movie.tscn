@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://rifmn1nidhd1"]
+[gd_scene load_steps=23 format=3 uid="uid://rifmn1nidhd1"]
 
 [ext_resource type="Script" uid="uid://utnrqgctfl41" path="res://Scripts/movie.gd" id="1_qmis0"]
 [ext_resource type="Script" uid="uid://6kgheggos2ui" path="res://Scripts/static_objects.gd" id="2_amsei"]
@@ -9,12 +9,18 @@
 [ext_resource type="Script" uid="uid://5bligna3bg7" path="res://Scripts/dynamic_objects.gd" id="6_poyp3"]
 [ext_resource type="Script" uid="uid://bqyb7x8quu0vu" path="res://Scripts/vehicles.gd" id="7_e34rv"]
 [ext_resource type="Script" uid="uid://ck0s5lwsc6a5" path="res://Scripts/connector.gd" id="8_klp4n"]
+[ext_resource type="Script" uid="uid://dwkn8ierhx7pk" path="res://Scripts/rsu.gd" id="8_tti1v"]
 [ext_resource type="Script" uid="uid://dbjuptyvexbvv" path="res://Scripts/h_slider.gd" id="9_5coti"]
 [ext_resource type="Script" uid="uid://do1vdvw1jh2td" path="res://Scripts/emoji.gd" id="9_g6ygf"]
 [ext_resource type="Texture2D" uid="uid://cjq7pabh00k5i" path="res://Icons/play-svgrepo-com.svg" id="9_ohy1f"]
 [ext_resource type="Texture2D" uid="uid://cdq18rgyb8oh5" path="res://Icons/minus-svgrepo-com.svg" id="10_c0rc2"]
-[ext_resource type="Script" uid="uid://vel2fykixli0" path="res://Scenes/log_daten.gd" id="10_eoa1l"]
+[ext_resource type="Script" uid="uid://vel2fykixli0" path="res://Scripts/log_daten.gd" id="10_eoa1l"]
 [ext_resource type="Texture2D" uid="uid://bts04p8ia31b1" path="res://Icons/plus-svgrepo-com.svg" id="11_klp4n"]
+[ext_resource type="Script" uid="uid://cdo7p50wwvj01" path="res://Scripts/traffic_light.gd" id="12_srsft"]
+[ext_resource type="Script" uid="uid://c4mkh0p73qkaa" path="res://Scripts/prism.gd" id="13_3ns64"]
+[ext_resource type="Script" uid="uid://c3fmpqnvxojio" path="res://Scripts/bubble.gd" id="14_cu08d"]
+[ext_resource type="Script" uid="uid://du8g5n3jpd6jl" path="res://Scripts/polygon.gd" id="15_in6s3"]
+[ext_resource type="Script" uid="uid://dcvvas4c34yl2" path="res://Scripts/marker.gd" id="16_dbjop"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_uha0q"]
 
@@ -42,6 +48,7 @@ script = ExtResource("6_poyp3")
 script = ExtResource("7_e34rv")
 
 [node name="RSU" type="Node3D" parent="DynamicObjects"]
+script = ExtResource("8_tti1v")
 
 [node name="Connector" type="Node3D" parent="DynamicObjects"]
 script = ExtResource("8_klp4n")
@@ -52,8 +59,25 @@ script = ExtResource("9_g6ygf")
 [node name="LogDaten" type="Node3D" parent="DynamicObjects"]
 script = ExtResource("10_eoa1l")
 
+[node name="TrafficLight" type="Node3D" parent="DynamicObjects"]
+script = ExtResource("12_srsft")
+
+[node name="Prism" type="Node3D" parent="DynamicObjects"]
+script = ExtResource("13_3ns64")
+
+[node name="Bubble" type="Node3D" parent="DynamicObjects"]
+script = ExtResource("14_cu08d")
+
+[node name="Polygon" type="Node3D" parent="DynamicObjects"]
+script = ExtResource("15_in6s3")
+
+[node name="Marker" type="Node3D" parent="DynamicObjects"]
+script = ExtResource("16_dbjop")
+
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(0.998335, 0.00404082, -0.0575394, 0.0504647, 0.42194, 0.905218, 0.027936, -0.906615, 0.421033, 0, 200, 0)
+transform = Transform3D(0.998335, 0.00404082, -0.0575394, 0.0504647, 0.42194, 0.905218, 0.027936, -0.906615, 0.421033, 0, 300, 0)
+current = true
+far = 1e+06
 script = ExtResource("4_uha0q")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
@@ -206,18 +230,127 @@ theme_override_colors/default_color = Color(0, 0, 0, 1)
 text = "x:100, y:100, z: 100"
 horizontal_alignment = 2
 
-[node name="LogPanel" type="Panel" parent="UI"]
+[node name="LogData" type="TextEdit" parent="UI"]
 layout_mode = 0
-offset_right = 374.0
-offset_bottom = 139.0
+offset_right = 443.0
+offset_bottom = 127.0
+theme_override_colors/font_readonly_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 12
+editable = false
+scroll_smooth = true
 
-[node name="Daten" type="RichTextLabel" parent="UI/LogPanel"]
+[node name="Error" type="Control" parent="UI"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -209.0
+offset_top = -82.0
+offset_right = 211.0
+offset_bottom = 88.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="UI/Error"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Ignore" type="Button" parent="UI/Error"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -205.0
+offset_top = -35.0
+offset_right = -70.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Ignore"
+
+[node name="Close" type="Button" parent="UI/Error"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 69.0
+offset_top = -35.0
+offset_right = 204.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Close Program"
+
+[node name="ErrorLabel" type="RichTextLabel" parent="UI/Error"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -209.0
+offset_top = -84.0
+offset_right = 209.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/normal_font_size = 12
+text = "Warning!
+The Object with the id: does not have the property: 
+"
+horizontal_alignment = 1
+
+[node name="Annotations" type="Control" parent="UI"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -128.0
+offset_top = -155.0
+offset_right = -57.0
+offset_bottom = 6.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="PrismCheck" type="CheckButton" parent="UI/Annotations"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -22.0
+offset_right = 22.0
+offset_bottom = 24.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+button_pressed = true
+text = "Prism"
+
+[node name="PolygonCheck" type="CheckButton" parent="UI/Annotations"]
 layout_mode = 0
-offset_right = 374.0
-offset_bottom = 140.0
+offset_left = -28.0
+offset_top = 27.0
+offset_right = 82.0
+offset_bottom = 58.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+button_pressed = true
+text = "Polygon"
 
 [connection signal="pressed" from="UI/Play" to="DynamicObjects" method="_on_play_pressed"]
 [connection signal="pressed" from="UI/Back" to="DynamicObjects" method="_on_back_pressed"]
 [connection signal="pressed" from="UI/Forward" to="DynamicObjects" method="_on_forward_pressed"]
 [connection signal="value_changed" from="UI/HSlider" to="DynamicObjects" method="_on_h_slider_value_changed"]
 [connection signal="value_changed" from="UI/Speed" to="DynamicObjects" method="_on_speed_value_changed"]
+[connection signal="pressed" from="UI/Error/Ignore" to="." method="_on_ignore_pressed"]
+[connection signal="pressed" from="UI/Error/Close" to="." method="_on_close_pressed"]
+[connection signal="pressed" from="UI/Annotations/PrismCheck" to="DynamicObjects" method="_on_prism_check_pressed"]
+[connection signal="pressed" from="UI/Annotations/PolygonCheck" to="DynamicObjects" method="_on_polygon_check_pressed"]

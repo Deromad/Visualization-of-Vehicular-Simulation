@@ -5,9 +5,10 @@ extends Node3D
 var Connector = preload("res://Scenes/connector.tscn")
 var all_connections = []
 var all_connections_meta = []
-var all_connections_meta_pos = 0
+var all_connections_meta_pos = -1
 var len_all_meta_connections = 0
 var look_back = 2.0
+var first = true
 
 func create_connector(additions, removes, end_time):
 
@@ -30,13 +31,13 @@ func create_connector(additions, removes, end_time):
 func update_connector(time:String):
 	var f_time = float(time)
 
-	while all_connections_meta_pos < len_all_meta_connections and all_connections_meta[all_connections_meta_pos]["start"] <= f_time:
+	while all_connections_meta_pos +1< len_all_meta_connections and all_connections_meta[all_connections_meta_pos+1]["start"] <= f_time:
+		all_connections_meta_pos += 1
 
 		var this_con = all_connections_meta[all_connections_meta_pos]
 		var arr = [this_con["from"], this_con["to"], this_con["end"]]
 		arr.append(instantiate_con(arr))
 		all_connections.append(arr)
-		all_connections_meta_pos += 1
 	
 	for i in range(all_connections.size() - 1, -1, -1):
 		var con = all_connections[i]
@@ -52,7 +53,8 @@ func update_connector(time:String):
 			ins.global_position = (from + to) / 2
 			ins.scale = Vector3(vec.length(), 1, 1)
 			ins.global_rotation = Vector3(0, -Vector2(vec.x, vec.z).angle(), 0)
-			
+		
+	
 	
 func instantiate_con(info:Array):
 	var from =  vehicles.get_pos(info[0])
@@ -63,6 +65,7 @@ func instantiate_con(info:Array):
 	
 	var vec = to-from
 	#transform the arrow
+	
 	connection.global_position = (from + to) /2
 	connection.scale = Vector3(vec.length(), 1, 1)
 	connection.global_rotation = Vector3(0, - Vector2(vec.x, vec.z).angle(), 0)
@@ -74,19 +77,20 @@ func update_connector_backwards(time:String):
 	for i in range(all_connections.size() - 1, -1, -1):
 		all_connections[i][3].queue_free()
 	all_connections = []
-	if all_connections_meta_pos == len_all_meta_connections:
-		all_connections_meta_pos -= 1
-	while all_connections_meta_pos > 0  and all_connections_meta[all_connections_meta_pos]["start"] >= f_time-look_back:
+
+	while all_connections_meta_pos >= 0  and all_connections_meta[all_connections_meta_pos]["start"] >= f_time-look_back:
 		all_connections_meta_pos -= 1
 
+	
 
-	while  all_connections_meta[all_connections_meta_pos]["start"] <= f_time :
+	while  all_connections_meta_pos + 1 < len_all_meta_connections and all_connections_meta[all_connections_meta_pos + 1]["start"] <= f_time :
+		all_connections_meta_pos += 1
+
 		if all_connections_meta[all_connections_meta_pos]["end"] >= f_time:
 			var this_con = all_connections_meta[all_connections_meta_pos]
 			var arr = [this_con["from"], this_con["to"], this_con["end"]]
 			arr.append(instantiate_con(arr))
 			all_connections.append(arr)
-		all_connections_meta_pos += 1
 
 	for i in range(all_connections.size() - 1, -1, -1):
 		var con = all_connections[i]

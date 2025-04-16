@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://cnp87iarhir2h"]
+
+[ext_resource type="Script" uid="uid://cpa755s1hwr1k" path="res://Scripts/marker1.gd" id="1_sqlq3"]
+
+[node name="Marker" type="Node3D"]
+script = ExtResource("1_sqlq3")
+
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+billboard = 1
+text = "s"
+font_size = 282
+outline_size = 42

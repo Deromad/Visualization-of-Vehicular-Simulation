@@ -1,5 +1,6 @@
 extends Node3D
 @export var height = 2.0
+@onready var Error = $"../.."
 
 func create_junctions(data):
 	for junction in data:
@@ -8,10 +9,25 @@ func create_junctions(data):
 
 		var normals = PackedVector3Array()
 		
+		if not junction.has("id"):
+			Error.append_error("A Junction has no ID")
+			continue
+		
+		if not junction.has("shape"):
+			Error.append_error("The Junction with the id: " + junction["id"] + " has no entry \"shape\" ")
+			continue
+		
 		var shape_points = junction["shape"]
 		var name = junction["id"]
+		
+		if len(shape_points) < 2:
+			Error.append_error("The Junction with the id: " + junction["id"] + " has an less then 3 shapepoints ")
+			continue
 		for i in range(len(shape_points)-1):
-			#for each side of a house create a rectangle
+			#for each side of a junction create a rectangle
+			if not shape_points[i].has("x") or not shape_points[i].has("y"):
+				Error.append_error("The Junction with the id: " + junction["id"] + " has an invalid shapepoint ")
+				continue
 			var start_point = Vector2(shape_points[i]["x"], shape_points[i]["y"])
 			
 			verts3d.append(Vector3(start_point.x, height, start_point.y))

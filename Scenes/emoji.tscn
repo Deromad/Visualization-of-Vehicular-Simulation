@@ -6,4 +6,5 @@
 script = ExtResource("1_isu3s")
 
 [node name="Label3D" type="Label3D" parent="."]
+billboard = 1
 font_size = 500

@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://b81uqybw31aw1"]
+
+[ext_resource type="Script" uid="uid://yxnsw2xftgyv" path="res://bubble1.gd" id="1_fu76k"]
+
+[node name="Bubble" type="Node3D"]
+script = ExtResource("1_fu76k")
+
+[node name="Label3D" type="Label3D" parent="."]
+billboard = 1
+modulate = Color(0, 0, 0, 1)
+outline_modulate = Color(1, 1, 1, 1)
+font_size = 152
+outline_size = 127

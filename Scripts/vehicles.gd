@@ -1,6 +1,7 @@
 extends Node3D
 
 var VehicleScene = preload("res://Scenes/passenger.tscn")
+var Satellite = preload("res://Scenes/leo_2.tscn")
 var all_vehicles = {}
 var all_vehicles_meta = {}
 
@@ -16,16 +17,24 @@ func create_vehicles(data):
 		var length = vehicle["length"]
 
 		var width = vehicle["width"]
-
+		
+		
 		var dimensions = Vector3(length, height , width)
+		
 		var heading_angle = -Vector2(vehicle["heading"]["x"], vehicle["heading"]["y"]).angle()
 		#var startpos = Vector3(vehicle["pos"]["x"], height / 2 ,vehicle["pos"]["y"])
-
-		var startpos = Vector3(vehicle["pos"]["x"], height / 2 ,vehicle["pos"]["y"])
-
+	
+		var startpos = Vector3(vehicle["pos"]["x"], height / 2 +  vehicle["pos"]["z"] ,vehicle["pos"]["y"])
+		var vehicle_instance
+		if vehicle["vclass"] == "satellite":
+			dimensions *= 10000
+			color = Color.REBECCA_PURPLE
+			vehicle_instance = Satellite.instantiate()
+		else:
 		#create an instandce for a vehicle
-		var vehicle_instance = VehicleScene.instantiate()
+			vehicle_instance = VehicleScene.instantiate()
 		add_child(vehicle_instance)
+		
 		
 		vehicle_instance.global_translate(startpos)
 		vehicle_instance.scale_object_local(dimensions)
@@ -58,8 +67,8 @@ func add_timestemps(data):
 		var heading_angle = -Vector2(update["heading"]["x"], update["heading"]["y"]).angle()
 		#var startpos = Vector3(update["pos"]["x"], height / 2 ,update["pos"]["y"])
 
-		var startpos =Vector3(update["pos"]["x"], height / 2 ,update["pos"]["y"])
-
+		var startpos =Vector3(update["pos"]["x"], height / 2 +  update["pos"]["z"]    ,update["pos"]["y"])
+		
 		if all_vehicles.has(t):
 			all_vehicles[t]["update"].append({"id": v_id, "pos": startpos, "angle": heading_angle})
 		else:

@@ -22,9 +22,16 @@ var back_batchsize = 100
 @onready var vehicle = $Vehicles
 @onready var connector = $Connector
 @onready var emoji = $Emoji 
+@onready var logData = $LogDaten
 @onready var speed_label = $"../UI/SpeedLabel"
 @onready var time_label = $"../UI/Time"
-
+@onready var rsu = $RSU
+@onready var Error = $".."
+@onready var TrafficLight = $TrafficLight
+@onready var Prism = $Prism
+@onready var Bubble = $Bubble
+@onready var Polygon = $Polygon
+@onready var Marker = $Marker
 
 func create_dynamic_onjects(data):
 	var rsus = []
@@ -35,6 +42,16 @@ func create_dynamic_onjects(data):
 	var connector_removal = []
 	var emoji_addition = []
 	var emoji_removal = []
+	var log_data = []
+	var traffic_line_updates = []
+	var prism_update = []
+	var bubble_add = []
+	var bubble_rem = []
+	var polygon_add = []
+	var polygon_rem = []
+	var marker_add = []
+	var marker_rem = []
+	var other = {}
 	var first = true
 	var second = false
 	var bla = {}
@@ -50,7 +67,8 @@ func create_dynamic_onjects(data):
 					vehicle_update.append(item)
 				"timestepBegin":
 					timesteps.append(item["t"])
-		
+				"timestepEnd":
+					pass
 				
 				"vehicleRemoval":
 					vehicle_removal.append(item)
@@ -62,7 +80,30 @@ func create_dynamic_onjects(data):
 					emoji_addition.append(item)
 				"emojiRemoval":
 					emoji_removal.append(item)
-					
+				"logLineAddition":
+					log_data.append(item)
+				"trafficLightUpdate":
+					traffic_line_updates.append(item)
+				"prismUpdate":
+					prism_update.append(item)
+				"bubbleAddition":
+					bubble_add.append(item)
+				"bubbleRemoval":
+					bubble_rem.append(item)
+				"polygonAddition":
+					polygon_add.append(item)
+				"polygonRemoval":
+					polygon_rem.append(item)
+				"markerAddition":
+					marker_add.append(item)
+				"markerRemoval":
+					marker_rem.append(item)
+				
+				_:
+					other[str(item["type"])] = 0 
+	
+	for key in other.keys():
+		Error.append_error("In Update the Type: " + key + "is unknown")
 					
 	time_begin = timesteps[0]
 	time_end = timesteps[-1]
@@ -72,17 +113,26 @@ func create_dynamic_onjects(data):
 
 	time_frame = time_end-time_begin
 
-	var rsu = $RSU
 	
 	vehicle.create_vehicles(vehicles)
 	vehicle.add_timestemps(vehicle_update)
 	vehicle.remove_vehicles(vehicle_removal)
+	TrafficLight.add_update(traffic_line_updates)
+	Prism.add_update(prism_update)
 	
+	rsu.create_rsu(rsus)
 	
 	connector.create_connector(connector_addition, connector_removal, time_end)
-	
+	print(Time.get_time_dict_from_system())
 	emoji.create_emoji(emoji_addition, emoji_removal, time_end)
+	Bubble.create_bubble(bubble_add, bubble_rem, time_end)
+	Polygon.create_polygon(polygon_add, polygon_rem, time_end)
+	Marker.create_marker(marker_add, marker_rem, time_end)
+	print(Time.get_time_dict_from_system())
+	logData.create_log_data(log_data)
 	
+	
+	Error.create_error()
 	player(time_begin, time_end)
 	
 	
@@ -93,9 +143,13 @@ func player(start_time: float, end_time:float):
 	
 	while true:
 		while time < end_time and is_playing:
+			var time_until = Time.get_ticks_msec()
 			tick_time = timesteps[pos_of_timesteps+1]- timesteps[pos_of_timesteps]
 			update(time)
-			await get_tree().create_timer(tick_time / speed).timeout
+			var time_now = float(time_until - Time.get_ticks_msec())/ 1000
+			if time_now < -(tick_time / speed):
+				print(str(time_now) )
+			await get_tree().create_timer((tick_time / speed) + float(time_until - Time.get_ticks_msec())/ 1000).timeout
 			if is_playing:
 				pos_of_timesteps += 1
 				time = timesteps[pos_of_timesteps]
@@ -106,10 +160,18 @@ func player(start_time: float, end_time:float):
 	
 
 func update(time: float):
+	
 	var str_time = str(time)
+	TrafficLight.update_traffic(str_time)
+	Prism.update(str_time)
 	vehicle.set_to_time(str_time)
+	rsu.update_rsu(str_time)
 	connector.update_connector(str_time)
 	emoji.update_emoji(str_time)
+	Bubble.update_bubble(str_time)
+	Polygon.update_polygon(str_time)
+	Marker.update_marker(str_time)
+	logData.update_log_data(str_time)
 	last_time = time
 	time_label.text = str_time + " / " + str(time_end)
 
@@ -117,10 +179,16 @@ func update(time: float):
 
 func update_backward(time:float):
 	var str_time = str(time)
-
+	TrafficLight.update_traffic(str_time)
+	Prism.update(str_time)
 	vehicle.set_to_time_backwards(str_time)
+	rsu.update_rsu_backwards(str_time)
 	connector.update_connector_backwards(str_time)
 	emoji.update_emoji_backwards(str_time)
+	Bubble.update_bubble_backwards(str_time)
+	Polygon.update_polygon_backwards(str_time)
+	Marker.update_marker_backwards(str_time)
+	logData.update_log_data_backwards(str_time)
 	last_time = time
 	time_label.text = str_time + "/" + str(time_end)
 	slide.set_value_no_signal(time/time_frame * 100) 
@@ -177,3 +245,12 @@ func _on_speed_value_changed(value: float) -> void:
 	else:
 		speed = value + 1
 	speed_label.text = str(speed) + "x"
+
+
+
+func _on_prism_check_pressed() -> void:
+	Prism.visible = not Prism.visible
+
+
+func _on_polygon_check_pressed() -> void:
+	Polygon.visible = not Polygon.visible

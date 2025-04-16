@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://g0xjjc7s48c2"]
+
+[ext_resource type="PackedScene" uid="uid://duwda31ttn5nt" path="res://Models/rsu.glb" id="1_xs4kg"]
+
+[node name="rsu2" instance=ExtResource("1_xs4kg")]
+
+[node name="rsu" parent="." index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4, 0)

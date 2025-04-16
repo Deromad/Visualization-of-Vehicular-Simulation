@@ -1,0 +1,12 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://314ik2o5i4q7"]
+
+[ext_resource type="Texture2D" uid="uid://d3ci7raghv0el" path="res://Materials/Facade018A_1K-PNG/Facade018A_1K-PNG_AmbientOcclusion.png" id="1_nxurl"]
+
+[resource]
+cull_mode = 2
+albedo_color = Color(0.85098, 1, 1, 1)
+albedo_texture = ExtResource("1_nxurl")
+uv1_scale = Vector3(-0.055, -0.055, -0.055)
+uv1_offset = Vector3(0, 0.085, 0)
+uv1_triplanar = true
+uv1_world_triplanar = true

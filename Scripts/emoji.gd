@@ -6,7 +6,7 @@ extends Node3D
 var Emoji = preload("res://Scenes/emoji.tscn")
 var all_emojis = []
 var all_emojis_meta = []
-var all_emojis_meta_pos = 0
+var all_emojis_meta_pos = -1
 var len_all_meta_emojis = 0
 var look_back = 2.0
 var height_above_vehicle = 5.0
@@ -33,13 +33,13 @@ func create_emoji(additions, removes, end_time):
 func update_emoji(time:String):
 	var f_time = float(time)
 
-	while all_emojis_meta_pos < len_all_meta_emojis and all_emojis_meta[all_emojis_meta_pos]["start"] <= f_time:
+	while all_emojis_meta_pos+1 < len_all_meta_emojis and all_emojis_meta[all_emojis_meta_pos+1]["start"] <= f_time:
+		all_emojis_meta_pos += 1
 
 		var this_emoji = all_emojis_meta[all_emojis_meta_pos]
 		var arr = [this_emoji["to"], this_emoji["end"]]
 		arr.append(instantiate_emoji(this_emoji))
 		all_emojis.append(arr)
-		all_emojis_meta_pos += 1
 	
 	for i in range(all_emojis.size() - 1, -1, -1):
 		var emoji = all_emojis[i]
@@ -52,7 +52,6 @@ func update_emoji(time:String):
 
 
 			ins.global_position = to + Vector3(0, height_above_vehicle, 0)
-			ins.look_at(Camera.position)
 
 			
 	
@@ -65,7 +64,6 @@ func instantiate_emoji(info:Dictionary):
 	#transform the arrow
 	emoji.global_position = to + Vector3(0, height_above_vehicle, 0)
 	emoji.change_obj(info["color"], info["message"])
-	emoji.look_at(Camera.position)
 
 	
 	return emoji
@@ -75,19 +73,19 @@ func update_emoji_backwards(time:String):
 	for i in range(all_emojis.size() - 1, -1, -1):
 		all_emojis[i][2].queue_free()
 	all_emojis = []
-	if all_emojis_meta_pos == len_all_meta_emojis:
-		all_emojis_meta_pos -= 1
-	while all_emojis_meta_pos > 0  and all_emojis_meta[all_emojis_meta_pos]["start"] >= f_time-look_back:
+	
+	while all_emojis_meta_pos >= 0  and all_emojis_meta[all_emojis_meta_pos]["start"] >= f_time-look_back:
 		all_emojis_meta_pos -= 1
 
 
-	while  all_emojis_meta[all_emojis_meta_pos]["start"] <= f_time :
+	while  all_emojis_meta_pos +1 < len_all_meta_emojis and all_emojis_meta[all_emojis_meta_pos+1]["start"] <= f_time :
+		all_emojis_meta_pos += 1
+
 		if all_emojis_meta[all_emojis_meta_pos]["end"] >= f_time:
 			var this_emoji = all_emojis_meta[all_emojis_meta_pos]
 			var arr = [ this_emoji["to"], this_emoji["end"]]
 			arr.append(instantiate_emoji(this_emoji))
 			all_emojis.append(arr)
-		all_emojis_meta_pos += 1
 
 	for i in range(all_emojis.size() - 1, -1, -1):
 		var emoji = all_emojis[i]
@@ -99,4 +97,3 @@ func update_emoji_backwards(time:String):
 			var ins = emoji[2]
 
 			ins.global_position = to + Vector3(0, height_above_vehicle, 0)
-			ins.look_at(Camera.position)

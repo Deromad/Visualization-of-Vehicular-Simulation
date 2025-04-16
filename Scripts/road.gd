@@ -12,6 +12,8 @@ var ArrowLeft
 var ArrowRight
 
 
+@onready var Error = $"../.."
+@onready var TrafficLights = $"../../DynamicObjects/TrafficLight"
 
 @export var dotted_distance = 0.5
 @export var line_width = 0.15
@@ -23,12 +25,40 @@ var ArrowRight
 
 func create_roads(data): 
 	for road in data:
+		var lane_error = false
+
 		var lines = []
 		#a road can have more then one lane
 		
 		var first = true
+		if not road.has("id"):
+			Error.append_error("A Road has no ID")
+			continue
+		if not road.has("lanes"):
+			Error.append_error("The Road with the id: " + road["id"] + " has no entry \"lanes\" ")
+			continue
+		
 		for lane in road["lanes"]:
-			
+			if not lane.has("id"):
+				Error.append_error("A lane on the road " + road["id"] + " has no ID")
+				lane_error = true
+				continue
+			if not lane.has("shape"):
+				Error.append_error("The lane with the id: " + lane["id"] + " on the road " + road["id"] + " has no entry \"shape\" ")
+				lane_error = true
+				continue
+			if not lane.has("width"):
+				Error.append_error("The lane with the id: " + lane["id"] + " on the road " + road["id"] + " has no entry \"width\" ")
+				lane_error = true
+				continue
+			if not lane.has("allowedClasses"):
+				Error.append_error("The lane with the id: " + lane["id"] + " on the road " + road["id"] + " has no entry \"allowedClasses\" ")
+				lane_error = true
+				continue
+			if not lane.has("links"):
+				Error.append_error("The lane with the id: " + lane["id"] + " on the road " + road["id"] + " has no entry \"links\" ")
+				lane_error = true
+				continue
 
 			
 			var shape_points = lane["shape"]
@@ -37,10 +67,21 @@ func create_roads(data):
 			var kind = lane["allowedClasses"]
 			var color = Color()
 			var directions = []
+						#error if there are less then 2 shape points
+			if len(shape_points) < 2:
+				Error.append_error("The lane with the ID: " + str(name)  + " on the road " + road["id"] +  " has only one ore no shape point")
+				lane_error = true
+
+				continue
+				
 			if lane["links"] is Array:
 		
 					for dir in lane["links"]:
 						directions.append(dir["direction"])
+						var shape1 = shape_points[-1]
+						var shape2 = shape_points[-2]
+					
+						TrafficLights.set_direction(name, str(dir["lane"]), Vector3(shape1["x"], shape1["z"], shape1["y"]),Vector3(shape2["x"], shape2["z"], shape2["y"]), width, dir["direction"])
 				
 			if kind.has("bus"):
 				color = bus_lane_color
@@ -50,22 +91,28 @@ func create_roads(data):
 				color = normal_lane_color
 			
 			
-			#error if there are less then 2 shape points
-			if len(shape_points) < 2:
-				assert(false, "The road with the ID: " + str(name) + "has only one ore no shape point")
-				continue
+
 			
 			#create road
 			if first:
 				var zw = create_road(width, shape_points, name, true, color)
+				if zw.is_empty():
+					lane_error = true
+					continue
 				lines.append(zw[1])
 				lines.append(zw[0])
 			else:
-				lines.append(create_road(width, shape_points, name, false, color)[0])
+				var zw = create_road(width, shape_points, name, false, color)
+				if zw.is_empty():
+					lane_error = true
+					continue
+				lines.append(zw[0])
 			
 			add_arrow(directions, shape_points[-2], shape_points[-1])
 			first = false
 		
+		if lane_error:
+			continue
 	
 		create_outer_line_roads(lines[0])
 		create_outer_line_roads(lines[-1])
@@ -89,6 +136,9 @@ func create_road(width: float, shape_points, name: String, first: bool, color: C
 
 	
 	#calculate the edges of the road because only the middle of the lane is given
+	if not shape_points[0].has("x") or not shape_points[0].has("y") or not shape_points[1].has("x") or not shape_points[1].has("y") :
+		Error.append_error("The Road with the Lane with the id: " + name + " has an invalid shapepoint ")
+		return []
 
 	var start_point = Vector2(shape_points[0]["x"], shape_points[0]["y"])
 	var end_point = Vector2(shape_points[1]["x"], shape_points[1]["y"])
@@ -392,6 +442,19 @@ func add_arrow(dir, p1, p2):
 				arrow.scale_object_local(Vector3(1,1,arrow_length / 3))
 				arrow.rotate_y(angle-PI *3 /4)
 				arrow.name = str(name)
+			"turn":
+				var arrow = ArrowStraight.instantiate()
+				add_child(arrow)
+			
+				#transform the arrow
+				arrow.position = point2-norm_vec*(distance_road_to_arrow + arrow_length * 1/4)+ Vector3(0,height_to_lines,0)
+				arrow.scale_object_local(Vector3(1,1,arrow_length))
+				arrow.rotate_y(angle + PI/2)
+				arrow.name = str(name) 
+				
+			_:
+				Error.append_error("The direction: " + i + " of a lane is not known" )
+			
 				
 	
 
