@@ -1,15 +1,12 @@
-[gd_scene load_steps=4 format=3 uid="uid://cicflsv8gf2me"]
+[gd_scene load_steps=3 format=3 uid="uid://cicflsv8gf2me"]
 
 [ext_resource type="Script" uid="uid://b8opkuxubxavf" path="res://Scripts/prism1.gd" id="1_egbpo"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_m83xv"]
-
-[sub_resource type="PrismMesh" id="PrismMesh_egbpo"]
-material = SubResource("StandardMaterial3D_m83xv")
+[sub_resource type="BoxMesh" id="BoxMesh_egbpo"]
 
 [node name="Prism" type="Node3D"]
 script = ExtResource("1_egbpo")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.5, 0.5)
-mesh = SubResource("PrismMesh_egbpo")
+mesh = SubResource("BoxMesh_egbpo")

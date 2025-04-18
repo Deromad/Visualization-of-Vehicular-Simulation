@@ -22,7 +22,102 @@ var ArrowRight
 @export var normal_lane_color = Color.DIM_GRAY
 @export var bus_lane_color = Color.DARK_SLATE_GRAY
 @export var bike_lane_color = Color.FIREBRICK
+func create_roada(road):
+		var lane_error = false
 
+		var lines = []
+		#a road can have more then one lane
+		
+		var first = true
+		if not road.has("id"):
+			Error.append_error("A Road has no ID")
+			return
+		if not road.has("lanes"):
+			Error.append_error("The Road with the id: " + road["id"] + " has no entry \"lanes\" ")
+			return
+		
+		for lane in road["lanes"]:
+			if not lane.has("id"):
+				Error.append_error("A lane on the road " + road["id"] + " has no ID")
+				lane_error = true
+				continue
+			if not lane.has("shape"):
+				Error.append_error("The lane with the id: " + lane["id"] + " on the road " + road["id"] + " has no entry \"shape\" ")
+				lane_error = true
+				continue
+			if not lane.has("width"):
+				Error.append_error("The lane with the id: " + lane["id"] + " on the road " + road["id"] + " has no entry \"width\" ")
+				lane_error = true
+				continue
+			if not lane.has("allowedClasses"):
+				Error.append_error("The lane with the id: " + lane["id"] + " on the road " + road["id"] + " has no entry \"allowedClasses\" ")
+				lane_error = true
+				continue
+			if not lane.has("links"):
+				Error.append_error("The lane with the id: " + lane["id"] + " on the road " + road["id"] + " has no entry \"links\" ")
+				lane_error = true
+				continue
+
+			
+			var shape_points = lane["shape"]
+			var name = lane["id"]
+			var width = lane["width"]
+			var kind = lane["allowedClasses"]
+			var color = Color()
+			var directions = []
+						#error if there are less then 2 shape points
+			if len(shape_points) < 2:
+				Error.append_error("The lane with the ID: " + str(name)  + " on the road " + road["id"] +  " has only one ore no shape point")
+				lane_error = true
+
+				continue
+				
+			if lane["links"] is Array:
+		
+					for dir in lane["links"]:
+						directions.append(dir["direction"])
+						var shape1 = shape_points[-1]
+						var shape2 = shape_points[-2]
+					
+						TrafficLights.set_direction(name, str(dir["lane"]), Vector3(shape1["x"], shape1["z"], shape1["y"]),Vector3(shape2["x"], shape2["z"], shape2["y"]), width, dir["direction"])
+				
+			if kind.has("bus"):
+				color = bus_lane_color
+			elif kind.has("bicycle"):
+				color = bike_lane_color
+		
+			else:
+				color = normal_lane_color
+			
+			
+
+			
+			#create road
+			if first:
+				var zw = create_road(width, shape_points, name, true, color)
+				if zw.is_empty():
+					lane_error = true
+					continue
+				lines.append(zw[1])
+				lines.append(zw[0])
+			else:
+				var zw = create_road(width, shape_points, name, false, color)
+				if zw.is_empty():
+					lane_error = true
+					continue
+				lines.append(zw[0])
+			
+			add_arrow(directions, shape_points[-2], shape_points[-1])
+			first = false
+		
+		if lane_error:
+			return
+	
+		create_outer_line_roads(lines[0])
+		create_outer_line_roads(lines[-1])
+		
+		for i in range(len(lines)-2):
+			create_dotted_lines(lines[i+1])
 func create_roads(data): 
 	for road in data:
 		var lane_error = false
@@ -87,6 +182,7 @@ func create_roads(data):
 				color = bus_lane_color
 			elif kind.has("bicycle"):
 				color = bike_lane_color
+		
 			else:
 				color = normal_lane_color
 			

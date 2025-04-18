@@ -5,10 +5,8 @@ var Satellite = preload("res://Scenes/leo_2.tscn")
 var all_vehicles = {}
 var all_vehicles_meta = {}
 
-func create_vehicles(data):
-	all_vehicles_meta = {}
 
-	for vehicle in data:
+func create_vehicles(vehicle):
 		var visible_at = str(vehicle["t"])
 		var v_id = str(vehicle["id"])
 		var color_dic = vehicle["color"]
@@ -30,6 +28,8 @@ func create_vehicles(data):
 			dimensions *= 10000
 			color = Color.REBECCA_PURPLE
 			vehicle_instance = Satellite.instantiate()
+
+			
 		else:
 		#create an instandce for a vehicle
 			vehicle_instance = VehicleScene.instantiate()
@@ -41,41 +41,35 @@ func create_vehicles(data):
 		vehicle_instance.global_rotation = Vector3(0, heading_angle, 0)
 		vehicle_instance.recolor_obj(color)
 		vehicle_instance.name = str(v_id) 
-		vehicle_instance.visible = false
+
 		
 		#store the meta data for each vehicle
 		all_vehicles_meta[v_id] = {}
 		all_vehicles_meta[v_id]["height"] = height
-		all_vehicles_meta[v_id]["length"] = length
-		all_vehicles_meta[v_id]["width"] = width
+
 		all_vehicles_meta[v_id]["visible_at"] = vehicle["t"]
 		all_vehicles_meta[v_id]["instance"] = vehicle_instance
-		if all_vehicles.has(visible_at):
-			all_vehicles[visible_at]["add"].append({"id": v_id, "pos": startpos})
-		else:
-			
-			all_vehicles[visible_at] = {"add": [], "update": [], "remove": []}
-			all_vehicles[visible_at]["add"].append({"id": v_id, "pos": startpos})
 
-func add_timestemps(data):
-	for update in data:
+func add_timestemps(update):
+		
 		var t = str(float(update["t"]))
 		var v_id = str(update["id"])
-		var vehicle = all_vehicles_meta[v_id]
-		var dimensions = Vector3(vehicle["length"],vehicle["height"],vehicle["width"] )
+		var vehicle = all_vehicles_meta[v_id]["instance"]
+
 		var height = all_vehicles_meta[v_id]["height"]
 		var heading_angle = -Vector2(update["heading"]["x"], update["heading"]["y"]).angle()
 		#var startpos = Vector3(update["pos"]["x"], height / 2 ,update["pos"]["y"])
 
 		var startpos =Vector3(update["pos"]["x"], height / 2 +  update["pos"]["z"]    ,update["pos"]["y"])
-		
-		if all_vehicles.has(t):
-			all_vehicles[t]["update"].append({"id": v_id, "pos": startpos, "angle": heading_angle})
-		else:
-			
-			all_vehicles[t] = {"add": [], "update": [], "remove": []}
-			all_vehicles[t]["update"].append({"id": v_id, "pos": startpos, "angle": heading_angle})
+		vehicle.global_position  = startpos
+		vehicle.global_rotation = Vector3( 0, heading_angle, 0)
 	
+func remove_vehic(vehicle):
+	var id = vehicle["id"]
+	var ins = all_vehicles_meta[id]["instance"]
+	ins.queue_free()
+	all_vehicles_meta.erase(id)
+
 func set_to_time(time: String):
 	if not all_vehicles.has(time):
 		assert(true, "Timestemp is wrong")

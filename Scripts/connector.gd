@@ -7,7 +7,7 @@ var all_connections = []
 var all_connections_meta = []
 var all_connections_meta_pos = -1
 var len_all_meta_connections = 0
-var look_back = 2.0
+var look_back = 20000.0
 var first = true
 
 func create_connector(additions, removes, end_time):
@@ -17,12 +17,14 @@ func create_connector(additions, removes, end_time):
 
 	for i in all_connections_meta:
 		var has_end = false
-
+		var ia = 0
 		for remove in removes:
 			if i["id"] == remove["id"]:
 				i["end"] = remove["t"]
+				removes.remove_at(ia)
 				has_end = true
 				break
+			i += 1
 		if not has_end:
 			i["end"] = end_time
 	
@@ -49,11 +51,8 @@ func update_connector(time:String):
 			var to = vehicles.get_pos(con[1])
 			var ins = con[3]
 
-			var vec = to - from
-			ins.global_position = (from + to) / 2
-			ins.scale = Vector3(vec.length(), 1, 1)
-			ins.global_rotation = Vector3(0, -Vector2(vec.x, vec.z).angle(), 0)
-		
+			transform(from, to, ins)
+
 	
 	
 func instantiate_con(info:Array):
@@ -65,10 +64,8 @@ func instantiate_con(info:Array):
 	
 	var vec = to-from
 	#transform the arrow
-	
-	connection.global_position = (from + to) /2
-	connection.scale = Vector3(vec.length(), 1, 1)
-	connection.global_rotation = Vector3(0, - Vector2(vec.x, vec.z).angle(), 0)
+	transform(from, to, connection)
+
 	
 	return connection
 func update_connector_backwards(time:String):
@@ -102,8 +99,26 @@ func update_connector_backwards(time:String):
 			var to = vehicles.get_pos(con[1])
 			var ins = con[3]
 
+			transform(from, to, ins)
+func transform(from:Vector3, to:Vector3, ins):
 			var vec = to - from
-			ins.global_position = (from + to) / 2
-			ins.scale = Vector3(vec.length(), 1, 1)
-			ins.global_rotation = Vector3(0, -Vector2(vec.x, vec.z).angle(), 0)
+			var length = vec.length()
+
+			if length > 0.001: # um Division durch 0 zu vermeiden
+				var direction = vec.normalized()
+
+				# Erstelle eine neue Basis, die in Richtung X zeigt
+				var right = direction
+				var up = Vector3.UP
+
+				# Falls direction zu nah an UP ist, wähle eine andere UP-Richtung
+				if abs(direction.dot(up)) > 0.99:
+					up = Vector3.FORWARD
+
+				var forward = right.cross(up).normalized()
+				up = forward.cross(right).normalized()
+
+				var basis = Basis(right, up, forward).orthonormalized()
+				ins.global_transform = Transform3D(basis, to)
+				ins.scale = Vector3(length, 1, 1) # Länge auf X-Achse gestreckt
 			

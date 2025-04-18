@@ -5,15 +5,19 @@ extends Control
 signal level_changed
 
 func _ready():
+	print(1)
 	get_viewport().files_dropped.connect(on_files_dropped)
 
 func on_files_dropped(files):
+	print(2)
+	await get_tree().create_timer(0.0001).timeout
+
 	var mouse_pos = get_global_mouse_position()
 	if file_loader.get_global_rect().has_point(mouse_pos):
 		var valid_files = []
 
 		for file in files:
-			if file.ends_with(".json"):
+			if file.ends_with(".json") or file.ends_with(".jsonl"):
 				valid_files.append(file)
 
 		if valid_files.size() == 1:

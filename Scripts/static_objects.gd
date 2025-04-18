@@ -28,7 +28,7 @@ func create_static_objects(data):
 	
 	for key in other.keys():
 		Error.append_error("In Init the Type: " + key + "is unknown")
-
+		
 
 	var building2d5 = $Building2d5
 	var junction = $Junction

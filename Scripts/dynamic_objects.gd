@@ -34,6 +34,8 @@ var back_batchsize = 100
 @onready var Marker = $Marker
 
 func create_dynamic_onjects(data):
+	if data.size() == 0:
+		return
 	var rsus = []
 	var vehicles = []
 	var vehicle_update = []
