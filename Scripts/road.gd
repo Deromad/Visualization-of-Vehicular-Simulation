@@ -14,112 +14,23 @@ var ArrowRight
 
 @onready var Error = $"../.."
 @onready var TrafficLights = $"../../DynamicObjects/TrafficLight"
+@onready var TrainTreck = $"../TrainTrack"
 
 @export var dotted_distance = 0.5
 @export var line_width = 0.15
 @export var height = 1.0
 
-@export var normal_lane_color = Color.DIM_GRAY
-@export var bus_lane_color = Color.DARK_SLATE_GRAY
-@export var bike_lane_color = Color.FIREBRICK
-func create_roada(road):
-		var lane_error = false
+@export var normal_lane_material = preload("res://Materials/normal_lane.tres")
+@export var bus_lane_material = preload("res://Materials/bus_lane.tres")
+@export var bike_lane_material = preload("res://Materials/bike_lane.tres")
+@export var linee_material = preload("res://Materials/road_lines.tres")
+var wait = 20
+var wait_counter = 0
+var is_rail = false
 
-		var lines = []
-		#a road can have more then one lane
-		
-		var first = true
-		if not road.has("id"):
-			Error.append_error("A Road has no ID")
-			return
-		if not road.has("lanes"):
-			Error.append_error("The Road with the id: " + road["id"] + " has no entry \"lanes\" ")
-			return
-		
-		for lane in road["lanes"]:
-			if not lane.has("id"):
-				Error.append_error("A lane on the road " + road["id"] + " has no ID")
-				lane_error = true
-				continue
-			if not lane.has("shape"):
-				Error.append_error("The lane with the id: " + lane["id"] + " on the road " + road["id"] + " has no entry \"shape\" ")
-				lane_error = true
-				continue
-			if not lane.has("width"):
-				Error.append_error("The lane with the id: " + lane["id"] + " on the road " + road["id"] + " has no entry \"width\" ")
-				lane_error = true
-				continue
-			if not lane.has("allowedClasses"):
-				Error.append_error("The lane with the id: " + lane["id"] + " on the road " + road["id"] + " has no entry \"allowedClasses\" ")
-				lane_error = true
-				continue
-			if not lane.has("links"):
-				Error.append_error("The lane with the id: " + lane["id"] + " on the road " + road["id"] + " has no entry \"links\" ")
-				lane_error = true
-				continue
-
-			
-			var shape_points = lane["shape"]
-			var name = lane["id"]
-			var width = lane["width"]
-			var kind = lane["allowedClasses"]
-			var color = Color()
-			var directions = []
-						#error if there are less then 2 shape points
-			if len(shape_points) < 2:
-				Error.append_error("The lane with the ID: " + str(name)  + " on the road " + road["id"] +  " has only one ore no shape point")
-				lane_error = true
-
-				continue
-				
-			if lane["links"] is Array:
-		
-					for dir in lane["links"]:
-						directions.append(dir["direction"])
-						var shape1 = shape_points[-1]
-						var shape2 = shape_points[-2]
-					
-						TrafficLights.set_direction(name, str(dir["lane"]), Vector3(shape1["x"], shape1["z"], shape1["y"]),Vector3(shape2["x"], shape2["z"], shape2["y"]), width, dir["direction"])
-				
-			if kind.has("bus"):
-				color = bus_lane_color
-			elif kind.has("bicycle"):
-				color = bike_lane_color
-		
-			else:
-				color = normal_lane_color
-			
-			
-
-			
-			#create road
-			if first:
-				var zw = create_road(width, shape_points, name, true, color)
-				if zw.is_empty():
-					lane_error = true
-					continue
-				lines.append(zw[1])
-				lines.append(zw[0])
-			else:
-				var zw = create_road(width, shape_points, name, false, color)
-				if zw.is_empty():
-					lane_error = true
-					continue
-				lines.append(zw[0])
-			
-			add_arrow(directions, shape_points[-2], shape_points[-1])
-			first = false
-		
-		if lane_error:
-			return
-	
-		create_outer_line_roads(lines[0])
-		create_outer_line_roads(lines[-1])
-		
-		for i in range(len(lines)-2):
-			create_dotted_lines(lines[i+1])
 func create_roads(data): 
 	for road in data:
+	
 		var lane_error = false
 
 		var lines = []
@@ -133,6 +44,9 @@ func create_roads(data):
 			Error.append_error("The Road with the id: " + road["id"] + " has no entry \"lanes\" ")
 			continue
 		
+		var allowed_classes = []
+		is_rail = false
+
 		for lane in road["lanes"]:
 			if not lane.has("id"):
 				Error.append_error("A lane on the road " + road["id"] + " has no ID")
@@ -160,7 +74,7 @@ func create_roads(data):
 			var name = lane["id"]
 			var width = lane["width"]
 			var kind = lane["allowedClasses"]
-			var color = Color()
+			var color = StandardMaterial3D
 			var directions = []
 						#error if there are less then 2 shape points
 			if len(shape_points) < 2:
@@ -179,48 +93,64 @@ func create_roads(data):
 						TrafficLights.set_direction(name, str(dir["lane"]), Vector3(shape1["x"], shape1["z"], shape1["y"]),Vector3(shape2["x"], shape2["z"], shape2["y"]), width, dir["direction"])
 				
 			if kind.has("bus"):
-				color = bus_lane_color
+				color = bus_lane_material
 			elif kind.has("bicycle"):
-				color = bike_lane_color
+				color = bike_lane_material
+			elif kind.has("rail"):
+				is_rail = true
+				color = normal_lane_material
+	
 		
 			else:
-				color = normal_lane_color
+				color = normal_lane_material
+			allowed_classes.append(lane["canChangeRight"].is_empty())
+
+			allowed_classes.append(lane["canChangeLeft"].is_empty())
 			
 			
 
 			
 			#create road
-			if first:
-				var zw = create_road(width, shape_points, name, true, color)
-				if zw.is_empty():
-					lane_error = true
-					continue
-				lines.append(zw[1])
-				lines.append(zw[0])
-			else:
-				var zw = create_road(width, shape_points, name, false, color)
-				if zw.is_empty():
-					lane_error = true
-					continue
-				lines.append(zw[0])
+			
+			var zw = create_road(width, shape_points, name, true, color)
+			if zw.is_empty():
+				lane_error = true
+				continue
+			lines.append(zw[1])
+			lines.append(zw[0])
+			
 			
 			add_arrow(directions, shape_points[-2], shape_points[-1])
 			first = false
 		
 		if lane_error:
 			continue
-	
-		create_outer_line_roads(lines[0])
-		create_outer_line_roads(lines[-1])
-		
-		for i in range(len(lines)-2):
-			create_dotted_lines(lines[i+1])
+		if not is_rail:
+			create_outer_line_roads(lines[0])
+			create_outer_line_roads(lines[-1])
+			
+			
+			
+			for i in range(len(lines )/2-1):
+				if allowed_classes[(i+1)*2-1] and allowed_classes[(i+1)*2]:
+					create_outer_line_roads(lines[(i+1)*2])
+				#dotted line is right 
+				elif allowed_classes[(i+1)*2]:
+					create_outer_line_roads(lines[(i+1)*2])
+					create_dotted_lines(lines[(i+1)*2-1], -line_width)
+				#dotted line is left
+				elif allowed_classes[(i+1)*2-1]:
+					create_outer_line_roads(lines[(i+1)*2-1])
+					create_dotted_lines(lines[(i+1)*2-1], line_width)
+				else:
+					create_dotted_lines(lines[(i+1)*2-1], 0.0)
+			
 
 
 
 
 
-func create_road(width: float, shape_points, name: String, first: bool, color: Color) -> Array[PackedVector3Array]:
+func create_road(width: float, shape_points, name: String, first: bool, material: StandardMaterial3D) -> Array[PackedVector3Array]:
 	
 	#important values for ArrayMesh
 	var verts3d = PackedVector3Array()
@@ -308,38 +238,38 @@ func create_road(width: float, shape_points, name: String, first: bool, color: C
 		index.append(2*i+2)
 		index.append(2*i+3)
 		index.append(2*i+1)
-			
+	if is_rail:
+		TrainTreck.create_train_wood(verts3d, -width/2, width)
 	# Initialize the ArrayMesh.
-	var arr_mesh = ArrayMesh.new()
-	var arrays = []
-	arrays.resize(Mesh.ARRAY_MAX)
-	arrays[Mesh.ARRAY_VERTEX] = verts3d
-	arrays[Mesh.ARRAY_NORMAL] = normals
-	arrays[Mesh.ARRAY_INDEX] = index
+	else:
+		var arr_mesh = ArrayMesh.new()
+		var arrays = []
+		arrays.resize(Mesh.ARRAY_MAX)
+		arrays[Mesh.ARRAY_VERTEX] = verts3d
+		arrays[Mesh.ARRAY_NORMAL] = normals
+		arrays[Mesh.ARRAY_INDEX] = index
 
-	# Create the Mesh.
-	arr_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
-	var m = MeshInstance3D.new()
-	m.mesh = arr_mesh
-			
-	# create Material for each instance
-	var new_material = StandardMaterial3D.new()
-
- 
-
-	new_material.albedo_color = color
-
+		# Create the Mesh.
+		arr_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+		var m = MeshInstance3D.new()
+		m.mesh = arr_mesh
+				
+		# create Material for each instance
 		
-	m.set_surface_override_material(0, new_material)
-	add_child(m)
+
+			
+		m.set_surface_override_material(0, material)
+		add_child(m)
 	if first:
 		return[line1, line2]
-	return [line1]
+	return []
 	
 func create_outer_line_roads(line: PackedVector3Array):
 	var normals = PackedVector3Array()
 	var index = PackedInt32Array()
-
+	
+	
+	
 	for i in range(len(line)):
 		normals.append(Vector3(0,1,0))
 		
@@ -375,7 +305,7 @@ func create_outer_line_roads(line: PackedVector3Array):
 	m.set_surface_override_material(0, new_material)
 	add_child(m)
 	
-func create_dotted_lines(line: PackedVector3Array):
+func create_dotted_lines(line: PackedVector3Array, offset):
 	
 	var length_of_current_stripe = 0.0
 	var last_point1 = Vector3()
@@ -383,7 +313,7 @@ func create_dotted_lines(line: PackedVector3Array):
 	var is_stripe = false
 	var j = 0.0
 
-	#move the stripe in the middle of the to lines
+	#move the stripe in the middle of the two lines
 	for k in range((len(line) / 2)-1):
 		var i = 2*k	
 		var middle_line = line[i+2]-line[i]
@@ -406,8 +336,8 @@ func create_dotted_lines(line: PackedVector3Array):
 					verts.append(last_point1)
 					new_j = 1-length_of_current_stripe
 				else:
-					verts.append(line[i] + j* norm * dotted_distance - orth3d * line_width / 2)
-					verts.append(line[i] + j* norm * dotted_distance + orth3d * line_width / 2)	
+					verts.append(line[i] + j* norm * dotted_distance - orth3d * (line_width / 2 - offset))
+					verts.append(line[i] + j* norm * dotted_distance + orth3d * (line_width / 2 + offset))
 				
 				#last two verts at each stripe
 				if j+1 > number_of_stripes:
@@ -421,8 +351,8 @@ func create_dotted_lines(line: PackedVector3Array):
 					verts.append(last_point1)
 				else:
 					
-					verts.append(line[i] + (new_j)* norm * dotted_distance - orth3d * line_width / 2)
-					verts.append(line[i] + (new_j)* norm * dotted_distance + orth3d * line_width / 2)
+					verts.append(line[i] + (new_j)* norm * dotted_distance - orth3d * (line_width / 2 - offset))
+					verts.append(line[i] + (new_j)* norm * dotted_distance + orth3d * (line_width / 2 + offset))
 					is_stripe = false
 				j = new_j 
 				create_stripe(verts)
@@ -475,12 +405,12 @@ func create_stripe(line: PackedVector3Array):
 	m.mesh = arr_mesh
 			
 	# create Material for each instance
-	var new_material = StandardMaterial3D.new()
+	
 
-	new_material.albedo_color = Color.FLORAL_WHITE 
+
 
 		
-	m.set_surface_override_material(0, new_material)
+	m.set_surface_override_material(0, linee_material)
 	add_child(m)
 	
 

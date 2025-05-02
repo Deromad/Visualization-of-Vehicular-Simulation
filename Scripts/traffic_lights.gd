@@ -14,12 +14,20 @@ func change_obj(state:String)-> bool:
 		"green_major":
 			new_material = preload("res://Materials/green_major.tres")
 		"green_minor":
-			new_material = preload("res://Materials/green_major.tres")
+			new_material = preload("res://Materials/green_minor.tres")
 		"yellow_major":
 			new_material = preload("res://Materials/yellow_major.tres")
 		"yellow_minor":
 			new_material = preload("res://Materials/yellow_major.tres")
-	
+		"red_yellow":
+			new_material = preload("res://Materials/red_yellow.tres")
+		"off_blinking":
+			new_material = preload("res://Materials/off_blinking.tres")
+		"off_nosignal":
+			new_material = preload("res://Materials/off_no_signal.tres")
+		"stop":
+			new_material = preload("res://Materials/stop.tres")
+
 		_:
 			return false
 

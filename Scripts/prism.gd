@@ -1,71 +1,119 @@
 extends Node3D
-var all_prisms = {}
-var all_prisms_meta = {}
+
 var heigth = 0.0
 @onready var Error = $"../.."
 var Prism = preload("res://Scenes/prism.tscn")
 
-func add_prism(data:Array) ->void:
-	for prism in data:
-		if not prism.has("id"):
-			Error.append_error("A Prism has no ID")
-			continue
-		var id = prism["id"]
+var first = true
+var secon = false
+@onready var Movie = $"../.."
 
-		if not prism.has("shape") or  prism["shape"].size() != 4:
-			Error.append_error("The Prism with the ID " + str(id) + " has an invalide shape")
-			continue
-		if not prism.has("z_from") or not (prism["z_from"] is float or prism["z_from"] is float):
-			Error.append_error("The Prism with the ID " + str(id) + " has an invalide z_from")
-			continue
-		if not prism.has("z_to") or not (prism["z_to"] is float or prism["z_to"] is float) :
-			Error.append_error("The Prism with the ID " + str(id) + " has an invalide z_to")
-			continue
-		var shape = []
-		for i in prism["shape"]:
-			shape.append(Vector2(i["x"], i["y"]))
+var all_prisms = {}
+var all_prisms_meta = {}
 
-		if not Error.check_color(prism):
-			Error.append_error("The Prism with the ID " + str(id) + " has an invalide color")
-			continue
-		var color = prism["color"]
-		all_prisms_meta[id] = [initialize_prism(shape, prism["z_from"], prism["z_to"], Color(color["r"], color["g"], color["b"], color["a"])), prism["z_from"]]
-		if not all_prisms.has("0"):
-			all_prisms["0"] = []
-		all_prisms["0"].append([id,prism["z_to"]])
-func initialize_prism(shape:Array, z_from:int, z_to:int, color:Color) :
+func add_update(data:Dictionary)->void :
+	if data["t"] > Globals.max_t:
+		var id = data["id"]
+		var this_data = all_prisms[id]
+
+		if not this_data.is_empty() and data["t"] - this_data[-1][1] < Globals.look_back:
+			this_data.remove_at(this_data.size()-1)
+
+		this_data.append([data["z_to"], data["t"]])
 
 	
-	var prism = Prism.instantiate()
-	add_child(prism)
-	shape.sort()
-	#transform the arrow
-	var vec = shape[3]-shape[0]
-	prism.global_position = Vector3(shape[0].x, heigth, shape[0].y)
-	prism.scale = Vector3(vec.x, z_to-z_from, vec.y)
-	prism.transform_obj(color)
-	return prism
-func add_update(data:Array):
-	for update in data:
-		if not update.has("id") or not update["id"] is String:
-			Error.append_error("The Update of a Prism has no String Value ID")
-			continue
-		if not update.has("t") or not (update["t"] is float or update["t"] is float):
-			Error.append_error("The Update of a Prism has no Float or Int Value time")
-			continue
-		if not update.has("z_to") or not (update["z_to"] is float or update["z_to"] is float):
-			Error.append_error("The Update of a Prism has no Float or Int Value z_to")
-			continue
-		var t = str(update["t"])
-		if not all_prisms_meta.has(update["id"]):
-			Error.append_error("The PrismUpdate with the ID " + update["id"] + "ha no correct ADdition ")
-			continue
-		if not all_prisms.has(t):
-			all_prisms[t] = []
-		all_prisms[t].append([update["id"], update["z_to"]])
-func update(time:String):
-	if not all_prisms.has(time):
-		return
-	for i_prism in all_prisms[time]:
-		var this_prism = all_prisms_meta[i_prism[0]]
-		this_prism[0].scale = Vector3(this_prism[0].scale.x, i_prism[1]- this_prism[1] , this_prism[0].scale.z)
+
+
+
+
+func create_prisms(prisms: Array):
+	for prism in prisms:
+		var id = prism["id"]
+		all_prisms_meta[id]  = instantiate_prism(prism)
+		
+		all_prisms[id] = []
+		add_update({"t": 0.0, "id": id, "z_to": prism["z_to"]})
+
+func update_prism(prism:Dictionary):
+	var id = prism["id"]
+	var ins = all_prisms_meta[id]
+	transform(prism["z_to"], ins)
+	add_update(prism)
+
+
+func update_to_time(t:float):
+	for key in all_prisms.keys():
+		var this_prism = all_prisms[key]
+		for i in range(this_prism.size()-1, -1,-1):
+			if this_prism[i][1] <= t:
+				
+				var ins = all_prisms_meta[key]
+				transform(this_prism[i][0], ins)
+				
+
+	
+func instantiate_prism(prism:Dictionary):
+		var shapes = prism["shape"]
+		var verts3d = PackedVector3Array()
+		var verts2d = PackedVector2Array()
+		var normals = PackedVector3Array()
+		for shape in shapes:
+			normals.append(Vector3(0,1,0))
+			var vec = Vector3(shape["x"], 1, shape["y"])
+			verts3d.append(vec)
+			verts2d.append(Vector2(vec.x, vec.z))
+		for shape in shapes:
+			normals.append(Vector3(1,0,0))
+			var vec = Vector3(shape["x"], 0, shape["y"])
+			verts3d.append(vec)
+		var indices = Geometry2D.triangulate_polygon(verts2d)
+		
+		var size = shapes.size()
+		for i in range(size-1):
+			indices.append(i+1)
+			indices.append(i)
+			indices.append(size+i)
+			indices.append(i+1)
+			indices.append(size+i)
+			indices.append(size+i+1)
+		#last site of polygon
+		indices.append(0)
+		indices.append(size-1)
+		indices.append(2*size-1)
+		indices.append(0)
+		indices.append(2*size-1)
+		indices.append(size)
+		# Initialize the ArrayMesh.
+		var arr_mesh = ArrayMesh.new()
+		var arrays = []
+		arrays.resize(Mesh.ARRAY_MAX)
+		arrays[Mesh.ARRAY_VERTEX] = verts3d
+		arrays[Mesh.ARRAY_NORMAL] = normals
+
+		arrays[Mesh.ARRAY_INDEX] = indices
+		
+		# Create the Mesh.
+		arr_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+		var m = MeshInstance3D.new()
+		m.mesh = arr_mesh
+		
+		# create Material for each instance, so that they can have different colors
+		var new_material = StandardMaterial3D.new()
+		var color = prism["color"]
+		new_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		new_material.albedo_color =  Color8(color["r"], color["g"], color["b"], color["a"])
+
+		#add surface zo mesh and add roof to scene
+		m.set_surface_override_material(0, new_material)
+		m.position = Vector3(0,prism["z_from"],0)
+		transform(prism["z_to"], m)
+		add_child(m)
+		return m
+	
+func transform(to:float, ins)->void:
+		var y = ins.global_position.y
+		if y-to == 0:
+			ins.visible = false
+			return
+		ins.visible = true
+		ins.scale = Vector3(1, to- y,1)

@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://csclusb0xk03o" path="res://Scripts/passenger.gd" id="1_plka5"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lyrvh"]
+transparency = 1
 
 [sub_resource type="BoxMesh" id="BoxMesh_uumvl"]
 material = SubResource("StandardMaterial3D_lyrvh")

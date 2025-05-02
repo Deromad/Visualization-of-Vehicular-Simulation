@@ -1,100 +1,94 @@
 extends Node3D
 
-@onready var vehicles = $"../Vehicles"
+@onready var Vehicle = $"../Vehicles"
 @onready var Camera = $"../../Camera3D"
+@onready var RSU = $"../RSU"
 
 var bubble = preload("res://Scenes/bubble.tscn")
-var all_bubbles = []
-var all_bubbles_meta = []
-var all_bubbles_meta_pos = -1
-var len_all_meta_bubbles = 0
-var look_back = 2.0
+
 var height_above_vehicle = 3
 
-func create_bubble(additions, removes, end_time):
 
-	for addition in additions:
-		var color = addition["color"]
-		all_bubbles_meta.append({"id": addition["id"], "start": addition["t"], "end": end_time, "to": addition["to_id"], "message" : addition["message"], "color": Color(color["r"], color["g"], color["b"], color["a"])})
 
-	for i in all_bubbles_meta:
-		var has_end = false
+@onready var Movie = $"../.."
 
-		for remove in removes:
-			if i["id"] == remove["id"]:
-				i["end"] = remove["t"]
-				has_end = true
-				break
-		if not has_end:
-			i["end"] = end_time
+var all_bubbles = {}
+var all_bubbles_temp = {}
+var all_bubbles_meta = {}
+
+func add_addition(data:Dictionary, pos:int)->void :
+	all_bubbles_temp[data["id"]] = data["t"]
+	all_bubbles[data["id"]] = [pos, data["t"], Globals.length_of_programm]
+
+func add_removal(data:Dictionary)->void:
+	add_removal_t(data["id"], data["t"])
 	
-	len_all_meta_bubbles = len(all_bubbles_meta)
-	
-func update_bubble(time:String):
-	var f_time = float(time)
+func add_removal_t(id:String, t:float)->void:
+	if all_bubbles_temp.has(id):
 
-	while all_bubbles_meta_pos+1 < len_all_meta_bubbles and all_bubbles_meta[all_bubbles_meta_pos+1]["start"] <= f_time:
-		all_bubbles_meta_pos += 1
-
-		var this_bubble = all_bubbles_meta[all_bubbles_meta_pos]
-		var arr = [this_bubble["to"], this_bubble["end"]]
-		arr.append(instantiate_bubble(this_bubble))
-		all_bubbles.append(arr)
-	
-	for i in range(all_bubbles.size() - 1, -1, -1):
-		var bubble = all_bubbles[i]
-		if bubble[1] < f_time or not vehicles.is_there(bubble[0]):
-			bubble[2].queue_free()
-			all_bubbles.remove_at(i)
+		if t - all_bubbles_temp[id] < Globals.look_back:
+			all_bubbles.erase(id)
+			all_bubbles_temp.erase(id)
 		else:
-			var to = vehicles.get_pos(bubble[0])
-			var ins = bubble[2]
+			all_bubbles_temp.erase(id)
+			all_bubbles[id][1] = t
 
+func clean_all():
+	for key in all_bubbles_meta.keys():
+		var ins = all_bubbles_meta[key][1]
+		ins.queue_free()
+		all_bubbles_meta.erase(key)
 
-			ins.global_position = to + Vector3(0, height_above_vehicle, 0)
-
-			
+func create_bubbles(bubble: Dictionary, pos:int):
+	var info = [ bubble["to_id"]]
+	var color_dic = bubble["color"]
+	info.append(instantiate_bubble(info, Color(color_dic["r"], color_dic["g"], color_dic["b"], color_dic["a"]), bubble["message"]))
+	all_bubbles_meta[bubble["id"]]  = info
+	add_addition(bubble, pos)
 	
-func instantiate_bubble(info:Dictionary):
-	var to = vehicles.get_pos(info["to"])
+func update(t:float):
+	for key in all_bubbles_meta.keys():
+		var this_bubble = all_bubbles_meta[key]
+		var to_str = this_bubble[0]
+		if Vehicle.is_there(to_str):
+			transform(Vehicle.get_pos(to_str), this_bubble[1])
+		elif RSU.is_there(to_str):
+			transform(RSU.get_pos(to_str), this_bubble[1])
+
+		else:
+			#remove bubbleection
+			this_bubble[1].queue_free()
+			all_bubbles_meta.erase(key)
+			add_removal_t(key, t)
+
+func update_to_time(t:float):
+	for key in all_bubbles.keys():
+		var this_key = all_bubbles[key]
+		if this_key[1] <= t and this_key[2] > t:
+			var json = Movie.get_line(this_key[0])
+			create_bubbles(json, this_key[0])
+func remove_bubble(bubble:Dictionary):
+	var id = bubble["id"]
+	if all_bubbles_meta.has(id):
+		var ins = all_bubbles_meta[id][1]
+		ins.queue_free()
+		all_bubbles_meta.erase(id)
+		add_removal(bubble)
+
 	
+
+	
+func instantiate_bubble(info:Array, color:Color, message:String):
+	var to = Vehicle.get_pos(info[0])
+	if to == null:
+		to = RSU.get_pos(info[0])
 	var bubble = bubble.instantiate()
 	add_child(bubble)
-	
 	#transform the arrow
-	bubble.global_position = to + Vector3(0, height_above_vehicle, 0)
-	bubble.change_obj(info["color"], info["message"])
-	bubble.look_at(Camera.position)
+	transform(to, bubble)
+	bubble.change_obj(color, message)
 
-	
 	return bubble
-func update_bubble_backwards(time:String):
-
-	var f_time = float(time)
-	for i in range(all_bubbles.size() - 1, -1, -1):
-		all_bubbles[i][2].queue_free()
-	all_bubbles = []
 	
-	while all_bubbles_meta_pos >= 0  and all_bubbles_meta[all_bubbles_meta_pos]["start"] >= f_time-look_back:
-		all_bubbles_meta_pos -= 1
-
-
-	while  all_bubbles_meta_pos +1 < len_all_meta_bubbles and all_bubbles_meta[all_bubbles_meta_pos+1]["start"] <= f_time :
-		all_bubbles_meta_pos += 1
-
-		if all_bubbles_meta[all_bubbles_meta_pos]["end"] >= f_time:
-			var this_bubble = all_bubbles_meta[all_bubbles_meta_pos]
-			var arr = [ this_bubble["to"], this_bubble["end"]]
-			arr.append(instantiate_bubble(this_bubble))
-			all_bubbles.append(arr)
-
-	for i in range(all_bubbles.size() - 1, -1, -1):
-		var bubble = all_bubbles[i]
-		if bubble[1] < f_time or not vehicles.is_there(bubble[0]):
-			bubble[2].queue_free()
-			all_bubbles.remove_at(i)
-		else:
-			var to = vehicles.get_pos(bubble[0])
-			var ins = bubble[2]
-
-			ins.global_position = to + Vector3(0, height_above_vehicle, 0)
+func transform(to:Vector3, ins)->void:
+		ins.global_position = to + Vector3(0, height_above_vehicle, 0)

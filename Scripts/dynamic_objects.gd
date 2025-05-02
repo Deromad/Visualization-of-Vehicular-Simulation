@@ -33,6 +33,59 @@ var back_batchsize = 100
 @onready var Polygon = $Polygon
 @onready var Marker = $Marker
 
+func skipping_objects(data:Dictionary, value:float, pos:int)-> bool:
+	match data["type"]:
+		"vehicleUpdate":
+			vehicle.add_update(data, pos)
+		"connectorAddition":
+			connector.add_addition(data, pos)
+		"connectorRemoval":
+			connector.add_removal(data)
+		"vehicleAddition":
+			vehicle.add_addition(data, pos)
+		"vehicleRemoval":
+			vehicle.add_removal(data)
+		
+		"prismUpdate":
+			Prism.add_update(data)
+		"timestepBegin":
+			var t = data["t"]
+			if Error.time_until_next_cp <= 0 and Error.last_cp < t:
+				Error.last_cp = t
+				Error.time_until_next_cp = Error.checkpoint_intervall
+				Error.check_points.append([t, pos])
+
+			Error.time_until_next_cp -= t-Error.intervall
+
+			if data["t"] > value:
+				return true
+		"timestepEnd":
+			Error.intervall = data["t"]
+			Globals.max_t = max(Globals.max_t, data["t"])
+		"emojiAddition":
+			emoji.add_addition(data, pos)
+		"emojiRemoval":
+			emoji.add_removal(data)
+		"bubbleAddition":
+			Bubble.add_addition(data, pos)
+		"bubbleRemoval":
+			Bubble.add_removal(data)
+		"trafficLightUpdate":
+			TrafficLight.add_update(data, pos)
+		"markerAddition":
+									Marker.add_addition(data, pos)
+		"markerRemoval":
+									Marker.add_removal(data)
+		"polygonAddition":
+									Polygon.add_addition(data, pos)
+		"polygonRemoval":
+									Polygon.add_removal(data)
+		"rsuAddition":
+			rsu.add_addition(data, pos)
+		"rsuRemoval":
+			rsu.add_removal(data)
+	return false
+
 func create_dynamic_onjects(data):
 	if data.size() == 0:
 		return
@@ -215,15 +268,7 @@ func _on_forward_pressed() -> void:
 		update(time)
 
 
-func _on_h_slider_value_changed(value: float) -> void:
-	is_playing = false
-	
-	pos_of_timesteps = get_timestemp(value /100 *time_frame,0, len_of_timesteps-1)
-	time = timesteps[pos_of_timesteps]
-	#this function because its possible, because if you jump to a tick where 
-	#the object is already removed, it would not change its visibility
-	update_backward(time)
-	
+
 	
 func get_timestemp(value:float, start: int, end: int, step: int = 0) -> int:
 	if end -start <=1 or step >= 10:

@@ -1,99 +1,96 @@
 extends Node3D
 
-@onready var vehicles = $"../Vehicles"
+@onready var Vehicle = $"../Vehicles"
+@onready var RSU = $"../RSU"
+
 @onready var Camera = $"../../Camera3D"
 
 var Emoji = preload("res://Scenes/emoji.tscn")
-var all_emojis = []
-var all_emojis_meta = []
-var all_emojis_meta_pos = -1
-var len_all_meta_emojis = 0
-var look_back = 2.0
+
 var height_above_vehicle = 5.0
 
-func create_emoji(additions, removes, end_time):
 
-	for addition in additions:
-		var color = addition["color"]
-		all_emojis_meta.append({"id": addition["id"], "start": addition["t"], "end": end_time, "to": addition["to_id"], "message" : addition["message"], "color": Color(color["r"], color["g"], color["b"], color["a"])})
+@onready var Movie = $"../.."
 
-	for i in all_emojis_meta:
-		var has_end = false
+var all_emojis = {}
+var all_emojis_temp = {}
+var all_emojis_meta = {}
 
-		for remove in removes:
-			if i["id"] == remove["id"]:
-				i["end"] = remove["t"]
-				has_end = true
-				break
-		if not has_end:
-			i["end"] = end_time
+func add_addition(data:Dictionary, pos:int)->void :
+	all_emojis_temp[data["id"]] = data["t"]
+	all_emojis[data["id"]] = [pos, data["t"], Globals.length_of_programm]
+
+func add_removal(data:Dictionary)->void:
+	add_removal_t(data["id"], data["t"])
 	
-	len_all_meta_emojis = len(all_emojis_meta)
-	
-func update_emoji(time:String):
-	var f_time = float(time)
+func add_removal_t(id:String, t:float)->void:
+	if all_emojis_temp.has(id):
 
-	while all_emojis_meta_pos+1 < len_all_meta_emojis and all_emojis_meta[all_emojis_meta_pos+1]["start"] <= f_time:
-		all_emojis_meta_pos += 1
-
-		var this_emoji = all_emojis_meta[all_emojis_meta_pos]
-		var arr = [this_emoji["to"], this_emoji["end"]]
-		arr.append(instantiate_emoji(this_emoji))
-		all_emojis.append(arr)
-	
-	for i in range(all_emojis.size() - 1, -1, -1):
-		var emoji = all_emojis[i]
-		if emoji[1] < f_time or not vehicles.is_there(emoji[0]):
-			emoji[2].queue_free()
-			all_emojis.remove_at(i)
+		if t - all_emojis_temp[id] < Globals.look_back:
+			all_emojis.erase(id)
+			all_emojis_temp.erase(id)
 		else:
-			var to = vehicles.get_pos(emoji[0])
-			var ins = emoji[2]
+			all_emojis_temp.erase(id)
+			all_emojis[id][1] = t
+
+func clean_all():
+	for key in all_emojis_meta.keys():
+		var ins = all_emojis_meta[key][1]
+		ins.queue_free()
+		all_emojis_meta.erase(key)
+
+func create_emojis(emoji: Dictionary, pos:int):
+	var info = [ emoji["to_id"]]
+	var color_dic = emoji["color"]
+	info.append(instantiate_emoji(info, Color(color_dic["r"], color_dic["g"], color_dic["b"], color_dic["a"]), emoji["message"]))
+	all_emojis_meta[emoji["id"]]  = info
+	add_addition(emoji, pos)
 
 
-			ins.global_position = to + Vector3(0, height_above_vehicle, 0)
-
-			
 	
-func instantiate_emoji(info:Dictionary):
-	var to = vehicles.get_pos(info["to"])
+func update(t:float):
+	for key in all_emojis_meta.keys():
+		var this_emoji = all_emojis_meta[key]
+		var to_str = this_emoji[0]
+		if Vehicle.is_there(to_str):
+			transform(Vehicle.get_pos(to_str), this_emoji[1])
+		elif RSU.is_there(to_str): 
+			transform(RSU.get_pos(to_str), this_emoji[1])
+
+		else:
+			#remove emojiection
+			this_emoji[1].queue_free()
+			all_emojis_meta.erase(key)
+			add_removal_t(key, t)
+
+func update_to_time(t:float):
+	for key in all_emojis.keys():
+		var this_key = all_emojis[key]
+		if this_key[1] <= t and this_key[2] > t:
+			var json = Movie.get_line(this_key[0])
+			create_emojis(json, this_key[0])
+func remove_emoji(emoji:Dictionary):
+	var id = emoji["id"]
+	if all_emojis_meta.has(id):
+		var ins = all_emojis_meta[id][1]
+		ins.queue_free()
+		all_emojis_meta.erase(id)
+		add_removal(emoji)
+
 	
+
+	
+func instantiate_emoji(info:Array, color:Color, message:String):
+	var to = Vehicle.get_pos(info[0])
+	if to == null:
+		to = RSU.get_pos(info[0])
 	var emoji = Emoji.instantiate()
 	add_child(emoji)
-	
 	#transform the arrow
-	emoji.global_position = to + Vector3(0, height_above_vehicle, 0)
-	emoji.change_obj(info["color"], info["message"])
+	transform(to, emoji)
+	emoji.change_obj(color, message)
 
-	
 	return emoji
-func update_emoji_backwards(time:String):
-
-	var f_time = float(time)
-	for i in range(all_emojis.size() - 1, -1, -1):
-		all_emojis[i][2].queue_free()
-	all_emojis = []
 	
-	while all_emojis_meta_pos >= 0  and all_emojis_meta[all_emojis_meta_pos]["start"] >= f_time-look_back:
-		all_emojis_meta_pos -= 1
-
-
-	while  all_emojis_meta_pos +1 < len_all_meta_emojis and all_emojis_meta[all_emojis_meta_pos+1]["start"] <= f_time :
-		all_emojis_meta_pos += 1
-
-		if all_emojis_meta[all_emojis_meta_pos]["end"] >= f_time:
-			var this_emoji = all_emojis_meta[all_emojis_meta_pos]
-			var arr = [ this_emoji["to"], this_emoji["end"]]
-			arr.append(instantiate_emoji(this_emoji))
-			all_emojis.append(arr)
-
-	for i in range(all_emojis.size() - 1, -1, -1):
-		var emoji = all_emojis[i]
-		if emoji[1] < f_time or not vehicles.is_there(emoji[0]):
-			emoji[2].queue_free()
-			all_emojis.remove_at(i)
-		else:
-			var to = vehicles.get_pos(emoji[0])
-			var ins = emoji[2]
-
-			ins.global_position = to + Vector3(0, height_above_vehicle, 0)
+func transform(to:Vector3, ins)->void:
+		ins.global_position = to + Vector3(0, height_above_vehicle, 0)

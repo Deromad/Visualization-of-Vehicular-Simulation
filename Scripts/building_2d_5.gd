@@ -8,8 +8,8 @@ extends Node3D
 #load the simple facade scene
 var SimpleFacadeScene = preload("res://Scenes/simple_facade.tscn")
 
-func create_building2d5(data):
-	for house in data:
+func create_building2d5(house):
+	
 		#the 2D verts are better for the triangulation of the 
 		#roofs and are like the 3D verts without the height
 		var verts2d = PackedVector2Array()
@@ -22,28 +22,30 @@ func create_building2d5(data):
 		#get infos from the yaml input
 		if not house.has("id"):
 			Error.append_error("A Building2d5 has no ID")
-			continue
+			return
 		
 		if not house.has("shape"):
 			Error.append_error("The Buidling2d5 with the id: " + house["id"] + " has no entry \"shape\" ")
-			continue
+			return
 		if not house.has("color"):
 			Error.append_error("The Buidling2d5 with the id: " + house["id"] + " has no entry \"color\" ")
-			continue
+			return
 		if not house["color"].has("r"):
 			Error.append_error("The Buidling2d5 with the id: " + house["id"] + " has no color entry \"r\" ")
-			continue
+			return
 		if not house["color"].has("g"):
 			Error.append_error("The Buidling2d5 with the id: " + house["id"] + " has no color entry \"g\" ")
-			continue
+			return
 		if not house["color"].has("b"):
 			Error.append_error("The Buidling2d5 with the id: " + house["id"] + " has no color entry \"b\" ")
-			continue
+			return
 		if not house["color"].has("a"):
 			Error.append_error("The Buidling2d5 with the id: " + house["id"] + " has no color entry \"a\" ")
-			continue
+			return
+			
 		var shape_points = house["shape"]
 		var color_dic = house["color"]
+		var color = Color8(max(color_dic["r"],200), max(color_dic["g"],200), max(color_dic["b"],200), color_dic["a"])
 		var height = min_height + (max_height-min_height) * (color_dic["r"]+ color_dic["g"]+ color_dic["b"]+ color_dic["a"]) / (255 * 4)
 		var name = house["id"]
 		
@@ -51,7 +53,7 @@ func create_building2d5(data):
 		for i in range(len(shape_points)-1):
 			if not shape_points[i].has("x") or not shape_points[i].has("y") or not shape_points[i+1].has("x") or not shape_points[i+1].has("y") :
 				Error.append_error("The Builing2d5 with the id: " + house["id"] + " has an invalid shapepoint ")
-				continue
+				return
 			#for each wall of a house create a rectangle
 			var start_point = Vector2(shape_points[i]["x"], shape_points[i]["y"])
 			
@@ -80,6 +82,7 @@ func create_building2d5(data):
 			verts2d.append(start_point)
 			normals.append(Vector3(0,1,0))
 			
+			
 		#create roof
 		
 		#triangulate so that its known which verticies should form a triangle
@@ -99,8 +102,10 @@ func create_building2d5(data):
 		m.mesh = arr_mesh
 		
 		# create Material for each instance, so that they can have different colors
+		#var new_material = StandardMaterial3D.new()
+		#new_material.albedo_color = color  
+		#new_material.cull_mode = BaseMaterial3D.CULL_DISABLED
 		var new_material = preload("res://Materials/roof.tres")
-	
 		
 		#add surface zo mesh and add roof to scene
 		m.set_surface_override_material(0, new_material)

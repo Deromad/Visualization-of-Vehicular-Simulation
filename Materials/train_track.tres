@@ -1,0 +1,12 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://dcnv4v0vxiee0"]
+
+[ext_resource type="Texture2D" uid="uid://kpre5i7k3tx7" path="res://Materials/Unbenannt.png" id="1_h6ppn"]
+
+[resource]
+albedo_texture = ExtResource("1_h6ppn")
+refraction_enabled = true
+uv1_scale = Vector3(1, 1, 0.315)
+uv1_offset = Vector3(-2.355, 0.765, -2.055)
+uv1_world_triplanar = true
+uv2_world_triplanar = true
+proximity_fade_distance = 8.55

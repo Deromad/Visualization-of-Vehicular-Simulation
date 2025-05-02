@@ -6,17 +6,59 @@ extends Node3D
 @onready var Error = $"../.."
 
 var TrafficLight = preload("res://Scenes/traffic_light.tscn")
+
+var all_traffic_lights_temp = {}
+
+
+var height_of_traff = 0.5
+
+
+
+@onready var Movie = $"../.."
+
 var all_traffic_lights = {}
 var all_traffic_lights_meta = {}
-var all_traffic_lights_temp = {}
-var all_traffic_lights_meta_pos = -1
-var len_all_meta_traffic_lights = 0
-var look_back = 2.0
-var height_of_traff = 0.5
-var bla = 1
+
+func add_update(data:Dictionary, pos:int)->void :
+	if data["t"] > Globals.max_t:
+		var id = data["id"]
+		var this_data = all_traffic_lights[id]
+
+		if not this_data.is_empty() and data["t"] - this_data[-1][1] < Globals.look_back:
+			this_data.remove_at(this_data.size()-1)
+
+		this_data.append([pos, data["t"]])
+
+	
+
+
+
+
+
+
+func update_traffic_light(traffic_light:Dictionary, pos:int):
+	var id = traffic_light["id"]
+	var ins = all_traffic_lights_meta[id]
+	transform(traffic_light["state"], ins)
+	add_update(traffic_light, pos)
+
+
+func update_to_time(t:float):
+	for key in all_traffic_lights.keys():
+		var this_traffic_light = all_traffic_lights[key]
+		for i in range(this_traffic_light.size()-1, -1,-1):
+			if this_traffic_light[i][1] <= t:
+				var ins = all_traffic_lights_meta[key]
+				var states = Movie.get_line(this_traffic_light[i][0])["state"]
+				transform(states, ins)
+				
+
+	
+func transform(to:Array, ins:Array)->void:
+		for i in range(ins.size()):
+			ins[i].change_obj(to[i])
 
 func create_traffic_light_before(additions):
-	all_traffic_lights["0"] = []
 	var k = 0
 	for addition in additions:
 		if not addition.has("id"):
@@ -32,7 +74,6 @@ func create_traffic_light_before(additions):
 			Error.append_error("The traffic Light with the id: " + id + "has no state entry")
 			continue
 		var state  = addition["state"]
-		all_traffic_lights["0"].append([id,[]])
 		for link in addition["controlledLinks"].keys():
 				
 				
@@ -48,11 +89,8 @@ func create_traffic_light_before(additions):
 				all_traffic_lights_meta[id].append(null)
 				all_traffic_lights_temp[incoming].append([addition["controlledLinks"][link][0]["outgoing"], id,int(link), false])
 				
-				all_traffic_lights["0"][k][1].append(state[int(link)])
-		if all_traffic_lights["0"][k][1].is_empty():
-			all_traffic_lights["0"].remove_at(k)
-		else:
-			k+=1
+				
+		all_traffic_lights[id] = []
 func set_direction(in_id: String, out_id: String, pos1: Vector3, pos2:Vector3, width:float , dir:String):
 	if not all_traffic_lights_temp.has(in_id):
 		return
@@ -92,7 +130,7 @@ func initialize_traf(pos1:Vector3, pos2:Vector3, width:float, index:int, length:
 	traffic_line.global_position = urpos - vec3d * float(index) / length * float(width) + Vector3(0, 0.02 , 0)
 	traffic_line.scale = Vector3( float(width)/length / 2, 1, height_of_traff)
 	traffic_line.global_rotation = Vector3(0,-vec.angle(), 0)
-	bla += 1
+
 
 	return traffic_line
 
@@ -123,33 +161,6 @@ func sort_by_dir(a:String,b:String)-> bool:#
 			Error.append_error("The Direction: " + a + "of a roadlane is unknown")
 			return true
 
-func add_update(data: Array):
-	for update in data:
-		if not all_traffic_lights.has(str(update["t"])):
-			all_traffic_lights[str(update["t"])] = []
-		var this_traf = all_traffic_lights[str(update["t"])]
-		this_traf.append([update["id"],[]])
-		for state in update["state"]:
-			this_traf[-1][1].append(state)
-	
 
-
-func update_traffic(time:String):
-	if not all_traffic_lights.has(time):
-		return
-	for traf in all_traffic_lights[time]:
-		var j= 0
-
-		for lane in traf[1]:
-			if not all_traffic_lights_meta.has(traf[0]):
-				Error.append_error("No trafficLight with the id " + traf[0] + " is instanciated")
-				Error.create_error()
-				j += 1
-				continue
-				
-			if not all_traffic_lights_meta[traf[0]][j].change_obj(lane):
-				Error.append_error("The State: " + lane + "of a traffic line is unknown")
-				Error.create_error()
-			j+= 1
 	
 			

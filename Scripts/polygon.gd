@@ -3,51 +3,61 @@ extends Node3D
 @onready var vehicles = $"../Vehicles"
 @onready var Camera = $"../../Camera3D"
 
-var all_polygons = []
-var all_polygons_meta = []
-var all_polygons_meta_pos = -1
-var len_all_meta_polygons = 0
-var look_back = 2.0
-var height_above_vehicle = 5.0
 
-func create_polygon(additions, removes, end_time):
 
-	for addition in additions:
-		var color = addition["color"]
-		var shape = PackedVector3Array()
-		for s in addition["shape"]:
-			shape.append(Vector3(s["x"], s["z"], s["y"]))
-		all_polygons_meta.append({"id": addition["id"], "start": addition["t"], "shape": shape, "color": Color(color["r"], color["g"], color["b"], color["a"])})
+@onready var Movie = $"../.."
 
-	for i in all_polygons_meta:
-		var has_end = false
+var all_polygons = {}
+var all_polygons_temp = {}
+var all_polygons_meta = {}
 
-		for remove in removes:
-			if i["id"] == remove["id"]:
-				i["end"] = remove["t"]
-				has_end = true
-				break
-		if not has_end:
-			i["end"] = end_time
+func add_addition(data:Dictionary, pos:int)->void :
+	all_polygons_temp[data["id"]] = data["t"]
+	all_polygons[data["id"]] = [pos, data["t"], Globals.length_of_programm]
+
+func add_removal(data:Dictionary)->void:
+	add_removal_t(data["id"], data["t"])
 	
-	len_all_meta_polygons = len(all_polygons_meta)
-	
-func update_polygon(time:String):
-	var f_time = float(time)
+func add_removal_t(id:String, t:float)->void:
+	if all_polygons_temp.has(id):
 
-	while all_polygons_meta_pos+1 < len_all_meta_polygons and all_polygons_meta[all_polygons_meta_pos+1]["start"] <= f_time:
-		all_polygons_meta_pos += 1
+		if t - all_polygons_temp[id] < Globals.look_back:
+			all_polygons.erase(id)
+			all_polygons_temp.erase(id)
+		else:
+			all_polygons_temp.erase(id)
+			all_polygons[id][1] = t
 
-		var this_polygon = all_polygons_meta[all_polygons_meta_pos]
-		var arr = [ this_polygon["end"]]
-		arr.append(instantiate_polygon(this_polygon["shape"], this_polygon["color"]))
-		all_polygons.append(arr)
+func clean_all():
+	for key in all_polygons_meta.keys():
+		var ins = all_polygons_meta[key]
+		ins.queue_free()
+		all_polygons_meta.erase(key)
+
+
+func create_polygons(polygon: Dictionary, pos:int):
+	var color = polygon["color"]
+	var shapes = PackedVector3Array()
+	for i in polygon["shape"]:
+		shapes.append(Vector3(i["x"], i["z"], i["y"]))
+	all_polygons_meta[polygon["id"]] = instantiate_polygon(shapes, Color(color["r"], color["g"], color["b"], color["a"]))
+	add_addition(polygon, pos)
 	
-	for i in range(all_polygons.size() - 1, -1, -1):
-		var polygon = all_polygons[i]
-		if polygon[0] < f_time:
-			polygon[1].queue_free()
-			all_polygons.remove_at(i)
+
+
+func update_to_time(t:float):
+	for key in all_polygons.keys():
+		var this_key = all_polygons[key]
+		if this_key[1] <= t and this_key[2] > t:
+			var json = Movie.get_line(this_key[0])
+			create_polygons(json, this_key[0])
+func remove_polygon(polygon:Dictionary):
+	var id = polygon["id"]
+	if all_polygons_meta.has(id):
+		var ins = all_polygons_meta[id]
+		ins.queue_free()
+		all_polygons_meta.erase(id)
+		add_removal(polygon)
 
 
 
@@ -84,29 +94,5 @@ func instantiate_polygon(shape:PackedVector3Array, color: Color):
 		m.set_surface_override_material(0, new_material)
 		add_child(m)
 		return m
-func update_polygon_backwards(time:String):
 
-	var f_time = float(time)
-	for i in range(all_polygons.size() - 1, -1, -1):
-		all_polygons[i][1].queue_free()
-	all_polygons = []
-	
-	while all_polygons_meta_pos >= 0  and all_polygons_meta[all_polygons_meta_pos]["start"] >= f_time-look_back:
-		all_polygons_meta_pos -= 1
-
-
-	while  all_polygons_meta_pos +1 < len_all_meta_polygons and all_polygons_meta[all_polygons_meta_pos+1]["start"] <= f_time :
-		all_polygons_meta_pos += 1
-
-		if all_polygons_meta[all_polygons_meta_pos]["end"] >= f_time:
-			var this_polygon = all_polygons_meta[all_polygons_meta_pos]
-			var arr = [this_polygon["end"]]
-			arr.append(instantiate_polygon(this_polygon["shape"], this_polygon["color"]))
-			all_polygons.append(arr)
-
-	for i in range(all_polygons.size() - 1, -1, -1):
-		var polygon = all_polygons[i]
-		if polygon[0] < f_time:
-			polygon[1].queue_free()
-			all_polygons.remove_at(i)
 	

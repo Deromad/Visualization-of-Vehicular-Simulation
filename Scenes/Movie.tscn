@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://rifmn1nidhd1"]
+[gd_scene load_steps=24 format=3 uid="uid://rifmn1nidhd1"]
 
 [ext_resource type="Script" uid="uid://utnrqgctfl41" path="res://Scripts/movie.gd" id="1_qmis0"]
 [ext_resource type="Script" uid="uid://6kgheggos2ui" path="res://Scripts/static_objects.gd" id="2_amsei"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://bjyihgki73wdu" path="res://Scripts/junction.gd" id="4_jhqr3"]
 [ext_resource type="Script" uid="uid://b8nb31hhopqv4" path="res://Scripts/camera_3d.gd" id="4_uha0q"]
 [ext_resource type="Script" uid="uid://5bligna3bg7" path="res://Scripts/dynamic_objects.gd" id="6_poyp3"]
+[ext_resource type="Script" uid="uid://8jn5nudulv36" path="res://Scripts/train_track.gd" id="6_uae15"]
 [ext_resource type="Script" uid="uid://bqyb7x8quu0vu" path="res://Scripts/vehicles.gd" id="7_e34rv"]
 [ext_resource type="Script" uid="uid://ck0s5lwsc6a5" path="res://Scripts/connector.gd" id="8_klp4n"]
 [ext_resource type="Script" uid="uid://dwkn8ierhx7pk" path="res://Scripts/rsu.gd" id="8_tti1v"]
@@ -40,6 +41,9 @@ height = 0.0
 [node name="Junction" type="Node3D" parent="StaticObjects"]
 script = ExtResource("4_jhqr3")
 height = 0.01
+
+[node name="TrainTrack" type="Node3D" parent="StaticObjects"]
+script = ExtResource("6_uae15")
 
 [node name="DynamicObjects" type="Node3D" parent="."]
 script = ExtResource("6_poyp3")
@@ -345,12 +349,51 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 button_pressed = true
 text = "Polygon"
 
+[node name="Car_Scale" type="VSlider" parent="UI"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -75.0
+offset_top = -30.0
+offset_right = -59.0
+offset_bottom = 91.0
+grow_horizontal = 0
+grow_vertical = 2
+min_value = 1.0
+max_value = 20.0
+value = 1.0
+
+[node name="CarScaleText" type="RichTextLabel" parent="UI"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -78.0
+offset_top = 94.0
+offset_right = -36.0
+offset_bottom = 141.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+text = "1x"
+
+[connection signal="pressed" from="UI/Play" to="." method="_on_play_pressed"]
 [connection signal="pressed" from="UI/Play" to="DynamicObjects" method="_on_play_pressed"]
+[connection signal="pressed" from="UI/Back" to="." method="_on_back_pressed"]
 [connection signal="pressed" from="UI/Back" to="DynamicObjects" method="_on_back_pressed"]
+[connection signal="pressed" from="UI/Forward" to="." method="_on_forward_pressed"]
 [connection signal="pressed" from="UI/Forward" to="DynamicObjects" method="_on_forward_pressed"]
+[connection signal="value_changed" from="UI/HSlider" to="." method="_on_h_slider_value_changed"]
 [connection signal="value_changed" from="UI/HSlider" to="DynamicObjects" method="_on_h_slider_value_changed"]
+[connection signal="value_changed" from="UI/Speed" to="." method="_on_speed_value_changed"]
 [connection signal="value_changed" from="UI/Speed" to="DynamicObjects" method="_on_speed_value_changed"]
 [connection signal="pressed" from="UI/Error/Ignore" to="." method="_on_ignore_pressed"]
 [connection signal="pressed" from="UI/Error/Close" to="." method="_on_close_pressed"]
 [connection signal="pressed" from="UI/Annotations/PrismCheck" to="DynamicObjects" method="_on_prism_check_pressed"]
 [connection signal="pressed" from="UI/Annotations/PolygonCheck" to="DynamicObjects" method="_on_polygon_check_pressed"]
+[connection signal="value_changed" from="UI/Car_Scale" to="DynamicObjects/Vehicles" method="_on_car_scale_value_changed"]
