@@ -34,10 +34,10 @@ func add_removal_t(id:String, t:float)->void:
 			all_emojis[id][1] = t
 
 func clean_all():
-	for key in all_emojis_meta.keys():
-		var ins = all_emojis_meta[key][1]
-		ins.queue_free()
-		all_emojis_meta.erase(key)
+	for child in get_children():
+		child.queue_free()
+	
+	all_emojis_meta = {}
 
 func create_emojis(emoji: Dictionary, pos:int):
 	var info = [ emoji["to_id"]]

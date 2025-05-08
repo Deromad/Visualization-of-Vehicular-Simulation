@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://rifmn1nidhd1"]
+[gd_scene load_steps=28 format=3 uid="uid://rifmn1nidhd1"]
 
 [ext_resource type="Script" uid="uid://utnrqgctfl41" path="res://Scripts/movie.gd" id="1_qmis0"]
 [ext_resource type="Script" uid="uid://6kgheggos2ui" path="res://Scripts/static_objects.gd" id="2_amsei"]
@@ -22,8 +22,18 @@
 [ext_resource type="Script" uid="uid://c3fmpqnvxojio" path="res://Scripts/bubble.gd" id="14_cu08d"]
 [ext_resource type="Script" uid="uid://du8g5n3jpd6jl" path="res://Scripts/polygon.gd" id="15_in6s3"]
 [ext_resource type="Script" uid="uid://dcvvas4c34yl2" path="res://Scripts/marker.gd" id="16_dbjop"]
+[ext_resource type="Texture2D" uid="uid://dmmhk121dpbme" path="res://Materials/8k_earth_daymap.jpg" id="23_fjkid"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_uha0q"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_givqa"]
+albedo_texture = ExtResource("23_fjkid")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r0ss2"]
+albedo_texture = ExtResource("23_fjkid")
+
+[sub_resource type="SphereMesh" id="SphereMesh_uae15"]
+material = SubResource("StandardMaterial3D_r0ss2")
 
 [node name="Movie" type="Node3D"]
 script = ExtResource("1_qmis0")
@@ -79,7 +89,7 @@ script = ExtResource("15_in6s3")
 script = ExtResource("16_dbjop")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(0.998335, 0.00404082, -0.0575394, 0.0504647, 0.42194, 0.905218, 0.027936, -0.906615, 0.421033, 0, 300, 0)
+transform = Transform3D(-1, 5.61943e-08, -6.69697e-08, 0, 0.766045, 0.642787, 8.74228e-08, 0.642788, -0.766044, 200, 300, -200)
 current = true
 far = 1e+06
 script = ExtResource("4_uha0q")
@@ -88,10 +98,11 @@ script = ExtResource("4_uha0q")
 transform = Transform3D(10000, 0, 0, 0, 10000, 0, 0, 0, 10000, 0, -0.1, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+visible = false
 mesh = SubResource("PlaneMesh_uha0q")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.716107, -0.69799, 0, 0.148598, 0.152455, 0.977075, -0.681989, -0.699691, 0.212894, 0, 30.4258, 0)
+transform = Transform3D(0.716107, -0.69799, 0, 0.148598, 0.152455, 0.977075, -0.681989, -0.699691, 0.212894, 0, 100000, 0)
 
 [node name="UI" type="Control" parent="."]
 layout_mode = 3
@@ -227,12 +238,66 @@ anchor_left = 1.0
 anchor_right = 1.0
 offset_left = -267.0
 offset_top = 34.0
-offset_right = -56.0
+offset_right = -21.0
 offset_bottom = 74.0
 grow_horizontal = 0
 theme_override_colors/default_color = Color(0, 0, 0, 1)
-text = "x:100, y:100, z: 100"
 horizontal_alignment = 2
+
+[node name="x_edit" type="TextEdit" parent="UI/Koordinaten"]
+layout_mode = 0
+offset_left = 58.0
+offset_top = -2.0
+offset_right = 104.0
+offset_bottom = 31.0
+theme_override_colors/background_color = Color(0, 0, 0, 0)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 13
+
+[node name="RichTextLabel" type="RichTextLabel" parent="UI/Koordinaten"]
+layout_mode = 0
+offset_left = 44.0
+offset_top = -1.0
+offset_right = 60.0
+offset_bottom = 39.0
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+text = "x:"
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="UI/Koordinaten"]
+layout_mode = 0
+offset_left = 108.0
+offset_top = -1.0
+offset_right = 127.0
+offset_bottom = 39.0
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+text = "y:"
+
+[node name="y_edit" type="TextEdit" parent="UI/Koordinaten"]
+layout_mode = 0
+offset_left = 125.0
+offset_top = -3.0
+offset_right = 171.0
+offset_bottom = 32.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 13
+
+[node name="z_edit" type="TextEdit" parent="UI/Koordinaten"]
+layout_mode = 0
+offset_left = 191.0
+offset_top = -3.0
+offset_right = 237.0
+offset_bottom = 32.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 13
+
+[node name="RichTextLabel3" type="RichTextLabel" parent="UI/Koordinaten"]
+layout_mode = 0
+offset_left = 175.0
+offset_top = -1.0
+offset_right = 191.0
+offset_bottom = 39.0
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+text = "z:"
 
 [node name="LogData" type="TextEdit" parent="UI"]
 layout_mode = 0
@@ -382,6 +447,11 @@ grow_vertical = 2
 theme_override_colors/default_color = Color(0, 0, 0, 1)
 text = "1x"
 
+[node name="earth" type="MeshInstance3D" parent="."]
+transform = Transform3D(9.38339e+06, 1.73911e+06, 8.44311e+06, -2.32205e+06, 1.25286e+07, 0, -8.30172e+06, -1.53863e+06, 9.54319e+06, 0, -6.371e+06, 0)
+material_override = SubResource("StandardMaterial3D_givqa")
+mesh = SubResource("SphereMesh_uae15")
+
 [connection signal="pressed" from="UI/Play" to="." method="_on_play_pressed"]
 [connection signal="pressed" from="UI/Play" to="DynamicObjects" method="_on_play_pressed"]
 [connection signal="pressed" from="UI/Back" to="." method="_on_back_pressed"]
@@ -392,6 +462,9 @@ text = "1x"
 [connection signal="value_changed" from="UI/HSlider" to="DynamicObjects" method="_on_h_slider_value_changed"]
 [connection signal="value_changed" from="UI/Speed" to="." method="_on_speed_value_changed"]
 [connection signal="value_changed" from="UI/Speed" to="DynamicObjects" method="_on_speed_value_changed"]
+[connection signal="text_changed" from="UI/Koordinaten/x_edit" to="Camera3D" method="_on_x_edit_text_changed"]
+[connection signal="text_changed" from="UI/Koordinaten/y_edit" to="Camera3D" method="_on_y_edit_text_changed"]
+[connection signal="text_changed" from="UI/Koordinaten/z_edit" to="Camera3D" method="_on_z_edit_text_changed"]
 [connection signal="pressed" from="UI/Error/Ignore" to="." method="_on_ignore_pressed"]
 [connection signal="pressed" from="UI/Error/Close" to="." method="_on_close_pressed"]
 [connection signal="pressed" from="UI/Annotations/PrismCheck" to="DynamicObjects" method="_on_prism_check_pressed"]

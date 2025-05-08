@@ -29,10 +29,10 @@ func add_removal_t(id:String, t:float)->void:
 			all_rsus[id][1] = t
 
 func clean_all():
-	for key in all_rsus_meta.keys():
-		var ins = all_rsus_meta[key]
-		ins.queue_free()
-		all_rsus_meta.erase(key)
+	for child in get_children():
+		child.queue_free()
+	
+	all_rsus_meta = {}
 
 
 func create_rsus(rsu: Dictionary, pos:int):

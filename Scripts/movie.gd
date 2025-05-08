@@ -47,15 +47,40 @@ var only_ones = false
 var materials = {}
 
 signal error_acknowledged
-
+var frame_log_file : FileAccess
+var frame_log_path : String
+var frame_start_time : int
+func get_unique_file_path(base_path: String) -> String:
+	var path = base_path
+	var i = 1
+	while FileAccess.file_exists(path):
+		var dot_index = base_path.rfind(".")
+		if dot_index != -1:
+			path = base_path.substr(0, dot_index) + "_" + str(i) + base_path.substr(dot_index)
+		else:
+			path = base_path + "_" + str(i)
+		i += 1
+	return path
 func _ready() -> void:
 
 	#get yaml file-path from drag and drop
 	var file_path = Globals.path
 	Error.visible = false
 	if not file_path == "":
+		var json_name = Globals.path.get_file().get_basename()
+		#frame_log_path = get_unique_file_path("frame_log_" +json_name + ".csv")
+		#print(frame_log_path)
+		#frame_log_file = FileAccess.open(frame_log_path, FileAccess.WRITE)
+		#frame_log_file.store_line("timestamp_ms,frame_time_ms")  # CSV-Header
 		read_json()
-	
+#func _process(delta: float) -> void:
+	#if frame_log_file:
+		#var timestamp = Time.get_ticks_msec()
+		#var delta_ms = delta * 1000.0
+		#frame_log_file.store_line(str(timestamp) + "," + str(delta_ms))
+#func _exit_tree():
+	#if frame_log_file:
+		#frame_log_file.close()
 func read_json():
 	
 	#load file-path
@@ -275,6 +300,7 @@ func _on_back_pressed() -> void:
 							last1 = json["t"]
 							
 			break
+			
 
 func _on_forward_pressed() -> void:
 	should_play = true
@@ -284,9 +310,37 @@ func _on_forward_pressed() -> void:
 func _on_h_slider_value_changed(value: float) -> void:
 	should_play = false
 	is_skipping = true
-	clean_all()
+	var t = value/100 * Globals.length_of_programm
+	var bla = true
+	while t-time_now > 1800:
+			while not bla:
+				await get_tree().create_timer(0.01).timeout
+			print("start")
+			clean_all()
 
-	jump_to_timestemp(value/100 * Globals.length_of_programm)
+			jump_to_timestemp(time_now+1800)
+			print(time_now)
+			print(t)
+			
+			bla = false
+			
+			await get_tree().create_timer(0.01).timeout
+			print("end")
+
+			bla = true
+	while true:
+		var sh = false
+		if bla: 
+			print("last")
+			clean_all()
+
+			jump_to_timestemp(value/100 * Globals.length_of_programm)
+			sh = true
+			print("endlast")
+		if sh:
+			break
+	should_play = true
+	only_ones = true
 	#this function because its possible, because if you jump to a tick where 
 	#the object is already removed, it would not change its visibility
 	

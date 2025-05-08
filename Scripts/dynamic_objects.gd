@@ -60,6 +60,7 @@ func skipping_objects(data:Dictionary, value:float, pos:int)-> bool:
 			if data["t"] > value:
 				return true
 		"timestepEnd":
+			
 			Error.intervall = data["t"]
 			Globals.max_t = max(Globals.max_t, data["t"])
 		"emojiAddition":

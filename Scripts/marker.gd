@@ -28,10 +28,10 @@ func add_removal_t(id:String, t:float)->void:
 			all_markers[id][1] = t
 
 func clean_all():
-	for key in all_markers_meta.keys():
-		var ins = all_markers_meta[key]
-		ins.queue_free()
-		all_markers_meta.erase(key)
+	for child in get_children():
+		child.queue_free()
+	
+	all_markers_meta = {}
 
 
 func create_markers(marker: Dictionary, pos:int):

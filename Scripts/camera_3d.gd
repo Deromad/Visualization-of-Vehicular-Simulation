@@ -5,6 +5,9 @@ const SHIFT_MULTIPLIER = 6
 const ALT_MULTIPLIER = 1.0 / SHIFT_MULTIPLIER
 
 @onready var koord = $"../UI/Koordinaten"
+@onready var z_kood = $"../UI/Koordinaten/z_edit"
+@onready var x_kood = $"../UI/Koordinaten/x_edit"
+@onready var y_kood = $"../UI/Koordinaten/y_edit"
 
 @export_range(0.0, 1.0) var sensitivity: float = 0.25
 
@@ -28,6 +31,8 @@ var _q = false
 var _e = false
 var _shift = false
 var _alt = false
+
+var last_kood = [0,0,0]
 
 func _input(event):
 	# Receives mouse motion
@@ -98,7 +103,14 @@ func _update_movement(delta):
 		_velocity.z = clamp(_velocity.z + offset.z, -_vel_multiplier, _vel_multiplier)
 	
 		translate(_velocity * delta * speed_multi)
-		koord.text = "x:" + str(snapped(self.position.x, 0.1)) + ", y:" + str(snapped(self.position.z, 0.1)) + ", z:" + str(snapped(self.position.y, 0.1))
+		if not last_kood[0] == snapped(self.position.x, 0.1) or not last_kood[1] == snapped(self.position.z, 0.1) or not last_kood[2] == snapped(self.position.y, 0.1):
+			
+			x_kood.text =   str(snapped(self.position.x, 0.1)) 
+			y_kood.text =  str(snapped(self.position.z, 0.1)) 
+			z_kood.text =  str(snapped(self.position.y, 0.1))
+			last_kood[0] = snapped(self.position.x, 0.1)
+			last_kood[1] = snapped(self.position.z, 0.1)
+			last_kood[2]  = snapped(self.position.y, 0.1)
 
 # Updates mouse look 
 func _update_mouselook():
@@ -115,3 +127,25 @@ func _update_mouselook():
 	
 		rotate_y(deg_to_rad(-yaw))
 		rotate_object_local(Vector3(1,0,0), deg_to_rad(-pitch))
+
+func is_valid_float(text: String) -> bool:
+	var parsed = float(text)
+	var parsed_i = int(text)
+	return str(parsed) == text.strip_edges() or str(parsed_i) == text.strip_edges()
+
+func _on_z_edit_text_changed() -> void:
+	var z = z_kood.text
+	if is_valid_float(z):
+		position.y = float(z)
+
+
+func _on_x_edit_text_changed() -> void:
+	var z = x_kood.text
+	if is_valid_float(z):
+		position.x = float(z)
+
+
+func _on_y_edit_text_changed() -> void:
+	var z = y_kood.text
+	if is_valid_float(z):
+		position.z = float(z)

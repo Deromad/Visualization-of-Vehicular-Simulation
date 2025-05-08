@@ -1,25 +1,17 @@
 [gd_scene load_steps=5 format=3 uid="uid://cicflsv8gf2me"]
 
 [ext_resource type="Script" uid="uid://b8opkuxubxavf" path="res://Scripts/prism1.gd" id="1_egbpo"]
-[ext_resource type="Material" uid="uid://dcnv4v0vxiee0" path="res://Materials/train_track.tres" id="2_l8jig"]
+[ext_resource type="Texture2D" uid="uid://dmmhk121dpbme" path="res://Materials/8k_earth_daymap.jpg" id="3_da2n4"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_egbpo"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l8jig"]
+albedo_texture = ExtResource("3_da2n4")
 
-[sub_resource type="SphereMesh" id="SphereMesh_l8jig"]
-material = ExtResource("2_l8jig")
-radius = 0.635
-height = 1.125
+[sub_resource type="SphereMesh" id="SphereMesh_da2n4"]
 
 [node name="Prism" type="Node3D"]
-transform = Transform3D(0.805631, 0, 0, 0, 0.0965373, 0, 0, 0, 2.98091, 0.0633774, -0.0165372, -0.0395226)
 script = ExtResource("1_egbpo")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(1.06034, 0, 0, 0, 0.947638, 0, 0, 0, 1.05775, 0.191752, 0.5, 0.495869)
-material_override = ExtResource("2_l8jig")
-mesh = SubResource("BoxMesh_egbpo")
-
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
-transform = Transform3D(2.08973, 0.166765, 0.290426, 0, 24.7932, -0.0172482, -0.746834, 0.46663, 0.812648, 0, 23.3963, 0)
-material_override = ExtResource("2_l8jig")
-mesh = SubResource("SphereMesh_l8jig")
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.703811, 2.61772, 0.00158095)
+material_override = SubResource("StandardMaterial3D_l8jig")
+mesh = SubResource("SphereMesh_da2n4")

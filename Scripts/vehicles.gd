@@ -67,11 +67,10 @@ func add_removal(data:Dictionary)->void:
 			else:
 				all_vehicles_temp.erase(id)
 func clean_all():
-	for key in all_vehicles_meta.keys():
-		var ins = all_vehicles_meta[key]["instance"]
-		for i in ins:
-			i.queue_free()
-		all_vehicles_meta.erase(key)
+	for child in get_children():
+		child.queue_free()
+	
+	all_vehicles_meta = {}
 
 func create_vehicles(vehicle, pos):
 		match vehicle["vclass"]:

@@ -112,7 +112,8 @@ func instantiate_prism(prism:Dictionary):
 	
 func transform(to:float, ins)->void:
 		var y = ins.global_position.y
-		if y-to == 0:
+		if y-to == 0 or to == 0:
+			
 			ins.visible = false
 			return
 		ins.visible = true

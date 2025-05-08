@@ -36,7 +36,7 @@ _subresources={
 "materials": {
 "Drone_Black": {
 "use_external/enabled": true,
-"use_external/path": "uid://d0iww1hib0nsj"
+"use_external/path": "uid://i7got7tjpa7t"
 },
 "Drone_White": {
 "use_external/enabled": true,
@@ -44,7 +44,7 @@ _subresources={
 },
 "LEO_Panel": {
 "use_external/enabled": true,
-"use_external/path": "uid://d0iww1hib0nsj"
+"use_external/path": "uid://dnbre6fue5iqd"
 }
 }
 }

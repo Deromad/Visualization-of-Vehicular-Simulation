@@ -31,10 +31,10 @@ func add_removal_t(id:String, t:float)->void:
 			all_conns[id][1] = t
 
 func clean_all():
-	for key in all_conns_meta.keys():
-		var ins = all_conns_meta[key][2]
-		ins.queue_free()
-		all_conns_meta.erase(key)
+	for child in get_children():
+		child.queue_free()
+	
+	all_conns_meta = {}
 
 func create_conns(conn: Dictionary, pos:int):
 	var info = [conn["from_id"], conn["to_id"]]
