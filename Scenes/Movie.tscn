@@ -98,7 +98,6 @@ script = ExtResource("4_uha0q")
 transform = Transform3D(10000, 0, 0, 0, 10000, 0, 0, 0, 10000, 0, -0.1, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
-visible = false
 mesh = SubResource("PlaneMesh_uha0q")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
@@ -449,6 +448,7 @@ text = "1x"
 
 [node name="earth" type="MeshInstance3D" parent="."]
 transform = Transform3D(9.38339e+06, 1.73911e+06, 8.44311e+06, -2.32205e+06, 1.25286e+07, 0, -8.30172e+06, -1.53863e+06, 9.54319e+06, 0, -6.371e+06, 0)
+visible = false
 material_override = SubResource("StandardMaterial3D_givqa")
 mesh = SubResource("SphereMesh_uae15")
 

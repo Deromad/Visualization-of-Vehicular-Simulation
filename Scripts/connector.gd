@@ -55,12 +55,21 @@ func update(t:float):
 				transform(Vehicle.get_pos(from_str), Vehicle.get_pos(to_str), this_con[2])
 			elif RSU.is_there(to_str):
 				transform(Vehicle.get_pos(from_str), RSU.get_pos(to_str), this_con[2])
+			else:
+				#remove connection
+				this_con[2].queue_free()
+				all_conns_meta.erase(key)
+				add_removal_t(key, t)
 		elif RSU.is_there(to_str):
 			if Vehicle.is_there(to_str):
 				transform(RSU.get_pos(from_str), Vehicle.get_pos(to_str), this_con[2])
 			elif RSU.is_there(to_str):
 				transform(RSU.get_pos(from_str), RSU.get_pos(to_str), this_con[2])
-		
+			else:
+				#remove connection
+				this_con[2].queue_free()
+				all_conns_meta.erase(key)
+				add_removal_t(key, t)
 		else:
 			#remove connection
 			this_con[2].queue_free()
