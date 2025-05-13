@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://rifmn1nidhd1"]
+[gd_scene load_steps=30 format=3 uid="uid://rifmn1nidhd1"]
 
 [ext_resource type="Script" uid="uid://utnrqgctfl41" path="res://Scripts/movie.gd" id="1_qmis0"]
 [ext_resource type="Script" uid="uid://6kgheggos2ui" path="res://Scripts/static_objects.gd" id="2_amsei"]
@@ -23,8 +23,14 @@
 [ext_resource type="Script" uid="uid://du8g5n3jpd6jl" path="res://Scripts/polygon.gd" id="15_in6s3"]
 [ext_resource type="Script" uid="uid://dcvvas4c34yl2" path="res://Scripts/marker.gd" id="16_dbjop"]
 [ext_resource type="Texture2D" uid="uid://dmmhk121dpbme" path="res://Materials/8k_earth_daymap.jpg" id="23_fjkid"]
+[ext_resource type="Script" uid="uid://dbfrtqlosfvao" path="res://Scenes/y_achse.gd" id="23_givqa"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7lpw8"]
+disable_ambient_light = true
+albedo_color = Color(0.866699, 0.878582, 0.899989, 1)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_uha0q"]
+material = SubResource("StandardMaterial3D_7lpw8")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_givqa"]
 albedo_texture = ExtResource("23_fjkid")
@@ -89,19 +95,22 @@ script = ExtResource("15_in6s3")
 script = ExtResource("16_dbjop")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-1, 5.61943e-08, -6.69697e-08, 0, 0.766045, 0.642787, 8.74228e-08, 0.642788, -0.766044, 200, 300, -200)
-current = true
-far = 1e+06
+transform = Transform3D(-1, 5.61943e-08, -6.69697e-08, 0, 0.766045, 0.642787, 8.74228e-08, 0.642788, -0.766044, 200, 100, -200)
+near = 5.0
+far = 3e+07
 script = ExtResource("4_uha0q")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 transform = Transform3D(10000, 0, 0, 0, 10000, 0, 0, 0, 10000, 0, -0.1, 0)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+[node name="Groundplane" type="MeshInstance3D" parent="StaticBody3D"]
 mesh = SubResource("PlaneMesh_uha0q")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.716107, -0.69799, 0, 0.148598, 0.152455, 0.977075, -0.681989, -0.699691, 0.212894, 0, 100000, 0)
+transform = Transform3D(0.716107, -0.69799, 0, 0.148598, 0.152455, 0.977075, -0.681989, -0.699691, 0.212894, 0, 1e+08, 0)
+
+[node name="DirectionalLight3D2" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.715693, -0.698415, 0, -0.157109, -0.160996, -0.97437, 0.680515, 0.69735, -0.224951, 0, 1000, 0)
 
 [node name="UI" type="Control" parent="."]
 layout_mode = 3
@@ -446,11 +455,17 @@ grow_vertical = 2
 theme_override_colors/default_color = Color(0, 0, 0, 1)
 text = "1x"
 
-[node name="earth" type="MeshInstance3D" parent="."]
-transform = Transform3D(9.38339e+06, 1.73911e+06, 8.44311e+06, -2.32205e+06, 1.25286e+07, 0, -8.30172e+06, -1.53863e+06, 9.54319e+06, 0, -6.371e+06, 0)
-visible = false
+[node name="y-achse" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -6.371e+06, 0)
+script = ExtResource("23_givqa")
+
+[node name="x_achse" type="Node3D" parent="y-achse"]
+
+[node name="earth" type="MeshInstance3D" parent="y-achse/x_achse"]
+transform = Transform3D(-1.2742e+07, -1.11394, 4.86919e-08, 0, -0.556969, -1.2742e+07, 1.11394, -1.2742e+07, 0.556971, 0, 0, 0)
 material_override = SubResource("StandardMaterial3D_givqa")
 mesh = SubResource("SphereMesh_uae15")
+skeleton = NodePath("../../..")
 
 [connection signal="pressed" from="UI/Play" to="." method="_on_play_pressed"]
 [connection signal="pressed" from="UI/Play" to="DynamicObjects" method="_on_play_pressed"]

@@ -21,7 +21,7 @@ var _velocity = Vector3(0.0, 0.0, 0.0)
 var _acceleration = 30
 var _deceleration = -10
 var _vel_multiplier = 4
-
+var speed_kam = 15.0
 # Keyboard state
 var _w = false
 var _s = false
@@ -88,7 +88,7 @@ func _update_movement(delta):
 		+ _velocity.normalized() * _deceleration * _vel_multiplier * delta
 	
 	# Compute modifiers' speed multiplier
-	var speed_multi =15
+	var speed_multi =speed_kam
 	if _shift: speed_multi *= SHIFT_MULTIPLIER
 	if _alt: speed_multi *= ALT_MULTIPLIER
 	

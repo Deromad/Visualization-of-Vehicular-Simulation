@@ -13,6 +13,7 @@ var all_conns = {}
 var all_conns_temp = {}
 var all_conns_meta = {}
 
+
 func add_addition(data:Dictionary, pos:int)->void :
 	all_conns_temp[data["id"]] = data["t"]
 	all_conns[data["id"]] = [pos, data["t"], Globals.length_of_programm]
@@ -60,7 +61,7 @@ func update(t:float):
 				this_con[2].queue_free()
 				all_conns_meta.erase(key)
 				add_removal_t(key, t)
-		elif RSU.is_there(to_str):
+		elif RSU.is_there(from_str):
 			if Vehicle.is_there(to_str):
 				transform(RSU.get_pos(from_str), Vehicle.get_pos(to_str), this_con[2])
 			elif RSU.is_there(to_str):
@@ -127,6 +128,7 @@ func transform(from:Vector3, to:Vector3, ins):
 
 				var basis = Basis(right, up, forward).orthonormalized()
 				ins.global_transform = Transform3D(basis, to)
-				ins.scale = Vector3(length, 1, 1) # Länge auf X-Achse gestreckt
+				var width = Globals.width
+				ins.scale = Vector3(length, width, width) # Länge auf X-Achse gestreckt
 			
 				

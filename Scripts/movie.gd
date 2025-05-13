@@ -17,6 +17,9 @@ extends Node3D
 @onready var LogData = $DynamicObjects/LogDaten
 @onready var Marker = $DynamicObjects/Marker
 @onready var RSU = $DynamicObjects/RSU
+@onready var Earth = $"y-achse"
+@onready var Kamera = $Camera3D
+@onready var GroundPlane = $StaticBody3D/Groundplane
 
 var checkpoint_intervall = 4.0
 var time_until_next_cp = 0.0
@@ -96,7 +99,19 @@ func read_json():
 		var line_meta = data_file.get_line()
 		var json_meta = JSON.parse_string(line_meta)
 		Globals.length_of_programm = json_meta["time"]
-	
+		if json_meta.has("kood"):
+			Earth.rotatio(json_meta["kood"][0], json_meta["kood"][1])
+
+			Kamera.speed_kam = 15000
+			Globals.width = 10000
+			Kamera.position = Vector3(0, 1000000, 0)
+
+			
+		else:
+			GroundPlane.visible = true
+			Earth.visible = false
+			Kamera.far = 3000000
+			Kamera.near = 0.5
 		while true:
 			
 			while not data_file.eof_reached():

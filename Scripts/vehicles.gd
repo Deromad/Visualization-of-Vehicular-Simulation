@@ -486,7 +486,9 @@ func set_to_time(data:Dictionary, posi:int):
 		
 func get_pos(id:String):
 	if all_vehicles_meta.has(id) :
+
 		return all_vehicles_meta[id]["instance"][0].global_position
+
 	return null
 
 func is_there(id:String)->bool:

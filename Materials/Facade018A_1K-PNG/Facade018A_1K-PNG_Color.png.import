@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://b8r16og8etxpb"
 path.s3tc="res://.godot/imported/Facade018A_1K-PNG_Color.png-cf20027c4a24289113f0016d0fc3a79d.s3tc.ctex"
+path.etc2="res://.godot/imported/Facade018A_1K-PNG_Color.png-cf20027c4a24289113f0016d0fc3a79d.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://Materials/Facade018A_1K-PNG/Facade018A_1K-PNG_Color.png"
-dest_files=["res://.godot/imported/Facade018A_1K-PNG_Color.png-cf20027c4a24289113f0016d0fc3a79d.s3tc.ctex"]
+dest_files=["res://.godot/imported/Facade018A_1K-PNG_Color.png-cf20027c4a24289113f0016d0fc3a79d.s3tc.ctex", "res://.godot/imported/Facade018A_1K-PNG_Color.png-cf20027c4a24289113f0016d0fc3a79d.etc2.ctex"]
 
 [params]
 

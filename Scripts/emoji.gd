@@ -94,3 +94,5 @@ func instantiate_emoji(info:Array, color:Color, message:String):
 	
 func transform(to:Vector3, ins)->void:
 		ins.global_position = to + Vector3(0, height_above_vehicle, 0)
+		var width = Globals.width
+		ins.scale = Vector3(width, width, 1)

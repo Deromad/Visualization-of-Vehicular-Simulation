@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://b8llgo3cetik8"]
+[gd_scene load_steps=6 format=3 uid="uid://b8llgo3cetik8"]
 
 [ext_resource type="Script" uid="uid://csclusb0xk03o" path="res://Scripts/passenger.gd" id="1_plka5"]
 
@@ -8,6 +8,12 @@ transparency = 1
 [sub_resource type="BoxMesh" id="BoxMesh_uumvl"]
 material = SubResource("StandardMaterial3D_lyrvh")
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_plka5"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="PrismMesh" id="PrismMesh_lyrvh"]
+material = SubResource("StandardMaterial3D_plka5")
+
 [node name="Passenger" type="Node3D"]
 script = ExtResource("1_plka5")
 
@@ -16,3 +22,7 @@ script = ExtResource("1_plka5")
 [node name="Mesh" type="MeshInstance3D" parent="Cube"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, 0)
 mesh = SubResource("BoxMesh_uumvl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Cube"]
+transform = Transform3D(-4.05446e-09, 0.0728063, -1.31134e-10, 0, 3.18246e-09, 0.003, -0.34, -8.68206e-10, 1.56376e-18, -0.0571839, 0.51, 0)
+mesh = SubResource("PrismMesh_lyrvh")

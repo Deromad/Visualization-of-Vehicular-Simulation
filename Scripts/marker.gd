@@ -69,3 +69,5 @@ func instantiate_marker(marker: Dictionary):
 func transform(to:Vector3, message:String, ins)->void:
 		ins.global_position = to 
 		ins.change_obj( message)
+		var width = Globals.width
+		ins.scale = Vector3(width, width, 1)
