@@ -41,3 +41,10 @@ func on_files_dropped(files):
 func change_scene(file_path):
 		Globals.path = file_path
 		get_tree().change_scene_to_file("res://Scenes/Movie.tscn")
+
+
+
+
+
+func _on_check_button_toggled(toggled_on: bool) -> void:
+	Globals.warning = toggled_on

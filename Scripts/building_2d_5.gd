@@ -20,28 +20,7 @@ func create_building2d5(house):
 		#normals are necessary, so that the light knows how to interact also  for the roof
 		var normals = PackedVector3Array()
 		#get infos from the yaml input
-		if not house.has("id"):
-			Error.append_error("A Building2d5 has no ID")
-			return
-		
-		if not house.has("shape"):
-			Error.append_error("The Buidling2d5 with the id: " + house["id"] + " has no entry \"shape\" ")
-			return
-		if not house.has("color"):
-			Error.append_error("The Buidling2d5 with the id: " + house["id"] + " has no entry \"color\" ")
-			return
-		if not house["color"].has("r"):
-			Error.append_error("The Buidling2d5 with the id: " + house["id"] + " has no color entry \"r\" ")
-			return
-		if not house["color"].has("g"):
-			Error.append_error("The Buidling2d5 with the id: " + house["id"] + " has no color entry \"g\" ")
-			return
-		if not house["color"].has("b"):
-			Error.append_error("The Buidling2d5 with the id: " + house["id"] + " has no color entry \"b\" ")
-			return
-		if not house["color"].has("a"):
-			Error.append_error("The Buidling2d5 with the id: " + house["id"] + " has no color entry \"a\" ")
-			return
+	
 			
 		var shape_points = house["shape"]
 		var color_dic = house["color"]
@@ -110,5 +89,3 @@ func create_building2d5(house):
 		#add surface zo mesh and add roof to scene
 		m.set_surface_override_material(0, new_material)
 		add_child(m)
-
-	

@@ -6,8 +6,10 @@
 script = ExtResource("1_fu76k")
 
 [node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.06043e-05, 0, 0)
 billboard = 1
 modulate = Color(0, 0, 0, 1)
 outline_modulate = Color(1, 1, 1, 1)
+text = "s"
 font_size = 152
 outline_size = 127

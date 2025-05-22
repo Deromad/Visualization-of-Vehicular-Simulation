@@ -2,8 +2,7 @@ extends Node3D
 @onready var Error = $".."
 
 
-var buildings = []
-var junctions = []
+
 var roads = []
 var traffic_line_add = []
 var prism = []
@@ -20,16 +19,22 @@ func add_static_objects(item)-> bool:
 	if item.has("type"):
 			
 			match item["type"]:
+				
+				#are rendered immediately
 				"building_2d5":
 					building2d5.create_building2d5(item)
 				"junction":
 					junction.create_junctions(item)
+					
+				#have to be stored in an array
 				"road":
 					roads.append(item)
 				"trafficLight":
 					traffic_line_add.append(item)
 				"prismAddition":
 					prism.append(item)
+					
+				#if update then cancel static generation and go to dynamic objects
 				"update":
 					return true
 				_:

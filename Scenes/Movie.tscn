@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://rifmn1nidhd1"]
+[gd_scene load_steps=31 format=3 uid="uid://rifmn1nidhd1"]
 
 [ext_resource type="Script" uid="uid://utnrqgctfl41" path="res://Scripts/movie.gd" id="1_qmis0"]
 [ext_resource type="Script" uid="uid://6kgheggos2ui" path="res://Scripts/static_objects.gd" id="2_amsei"]
@@ -24,6 +24,7 @@
 [ext_resource type="Script" uid="uid://dcvvas4c34yl2" path="res://Scripts/marker.gd" id="16_dbjop"]
 [ext_resource type="Texture2D" uid="uid://dmmhk121dpbme" path="res://Materials/8k_earth_daymap.jpg" id="23_fjkid"]
 [ext_resource type="Script" uid="uid://dbfrtqlosfvao" path="res://Scenes/y_achse.gd" id="23_givqa"]
+[ext_resource type="Script" uid="uid://vcjt10akj41k" path="res://Scenes/testing.gd" id="25_r0ss2"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7lpw8"]
 disable_ambient_light = true
@@ -111,6 +112,9 @@ transform = Transform3D(0.716107, -0.69799, 0, 0.148598, 0.152455, 0.977075, -0.
 
 [node name="DirectionalLight3D2" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.715693, -0.698415, 0, -0.157109, -0.160996, -0.97437, 0.680515, 0.69735, -0.224951, 0, 1000, 0)
+
+[node name="Test" type="Node3D" parent="."]
+script = ExtResource("25_r0ss2")
 
 [node name="UI" type="Control" parent="."]
 layout_mode = 3
@@ -429,9 +433,9 @@ anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -75.0
-offset_top = -30.0
-offset_right = -59.0
+offset_left = -99.0
+offset_top = -31.0
+offset_right = -83.0
 offset_bottom = 91.0
 grow_horizontal = 0
 grow_vertical = 2
@@ -439,21 +443,34 @@ min_value = 1.0
 max_value = 20.0
 value = 1.0
 
-[node name="CarScaleText" type="RichTextLabel" parent="UI"]
+[node name="Satellite_Scale" type="VSlider" parent="UI"]
 layout_mode = 1
 anchors_preset = 6
 anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -78.0
-offset_top = 94.0
-offset_right = -36.0
-offset_bottom = 141.0
+offset_left = -39.0
+offset_top = -31.0
+offset_right = -23.0
+offset_bottom = 91.0
 grow_horizontal = 0
 grow_vertical = 2
-theme_override_colors/default_color = Color(0, 0, 0, 1)
-text = "1x"
+value = 10.0
+
+[node name="Conn_Scale" type="VSlider" parent="UI"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -69.0
+offset_top = -31.0
+offset_right = -53.0
+offset_bottom = 91.0
+grow_horizontal = 0
+grow_vertical = 2
 
 [node name="y-achse" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -6.371e+06, 0)
@@ -480,8 +497,12 @@ skeleton = NodePath("../../..")
 [connection signal="text_changed" from="UI/Koordinaten/x_edit" to="Camera3D" method="_on_x_edit_text_changed"]
 [connection signal="text_changed" from="UI/Koordinaten/y_edit" to="Camera3D" method="_on_y_edit_text_changed"]
 [connection signal="text_changed" from="UI/Koordinaten/z_edit" to="Camera3D" method="_on_z_edit_text_changed"]
-[connection signal="pressed" from="UI/Error/Ignore" to="." method="_on_ignore_pressed"]
-[connection signal="pressed" from="UI/Error/Close" to="." method="_on_close_pressed"]
+[connection signal="pressed" from="UI/Error/Ignore" to="Test" method="_on_ignore_pressed"]
+[connection signal="pressed" from="UI/Error/Close" to="Test" method="_on_close_pressed"]
 [connection signal="pressed" from="UI/Annotations/PrismCheck" to="DynamicObjects" method="_on_prism_check_pressed"]
 [connection signal="pressed" from="UI/Annotations/PolygonCheck" to="DynamicObjects" method="_on_polygon_check_pressed"]
 [connection signal="value_changed" from="UI/Car_Scale" to="DynamicObjects/Vehicles" method="_on_car_scale_value_changed"]
+[connection signal="value_changed" from="UI/Satellite_Scale" to="DynamicObjects/Vehicles" method="_on_satellite_scale_value_changed"]
+[connection signal="value_changed" from="UI/Conn_Scale" to="DynamicObjects/Connector" method="_on_conn_scale_value_changed"]
+[connection signal="value_changed" from="UI/Conn_Scale" to="DynamicObjects/Emoji" method="_on_conn_scale_value_changed"]
+[connection signal="value_changed" from="UI/Conn_Scale" to="DynamicObjects/Bubble" method="_on_conn_scale_value_changed"]

@@ -7,3 +7,4 @@ var max_t = -0.1
 var wait = 20
 var wait_counter = 0
 var width = 1
+var warning = false
