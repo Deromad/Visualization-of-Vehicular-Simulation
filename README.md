@@ -97,3 +97,102 @@ Each color is an RGBA object:
   ],
   "color": {"r": 255, "g": 0, "b": 0, "a": 255}
 }
+```
+#### Junction (`type`: `junction`)
+
+Represents a junction.
+
+##### Required Fields
+
+| Field     | Type      | Description |
+|-----------|-----------|-------------|
+| `type`    | `string`  | Must be `"junction"` |
+| `id`      | `string`  | Unique identifier for the building |
+| `shape`   | `array`   | List of points (`x`, `y`, `z`) forming a non-intersecting polygon |
+
+
+---
+
+##### Building Example
+
+```json
+{
+  "type": "junction",
+  "id": "J1",
+  "shape": [
+    {"x": 190, "y": 190, "z": 0},
+    {"x": 190, "y": 187.5, "z": 0}]},
+    {"x": 187.5, "y": 187.5, "z": 0},
+  ]
+}
+```
+#### Road (`type`: `road`)
+
+Represents a junction.
+#### Road (`type`: `road`)
+
+Represents road with at least one lane, lanes has to be in order from right to left
+
+##### Required Fields
+
+| Field       | Type      | Description |
+|-------------|-----------|-------------|
+| `type`      | `string`  | Must be `"road"` |
+| `id`        | `string`  | Unique identifier for the road |
+| `laneCount` | `integer` | Number of lanes |
+| `lanes`     | `array`   | List of lane objects containing individual lane details |
+
+##### Required Fields per Lane Object
+
+| Field            | Type     | Description |
+|------------------|----------|-------------|
+| `id`             | `string` | Unique identifier for the lane |
+| `width`          | `number` | Width of the lane in meters |
+| `allowedClasses` | `array`  | List of allowed vehicle classes |
+| `canChangeLeft`  | `array`  | Vehicle classes allowed to change to the left if emtpy draw a continous line to the left|
+| `canChangeRight` | `array`  | Vehicle classes allowed to change to the right if emtpy draw a continous line to the right|
+| `shape`          | `array`  | List of points (`x`, `y`, `z`) defining the lane geometry |
+---
+
+##### Building Example
+
+```json
+{
+  "type": "road",
+  "id": "ed",
+  "laneCount": 1,
+  "lanes": [
+    {
+      "id": "ed_0",
+      "width": 3.2,
+      "allowedClasses": [
+        "bus"
+      ],
+      "canChangeLeft": [
+        "private", "emergency", "authority", "army", "vip", "pedestrian", "passenger", "hov", "taxi", "bus", "coach", "delivery", "truck", "trailer", "motorcycle", "moped", "bicycle", "evehicle", "tram", "rail_urban", "rail", "rail_electric", "rail_fast", "ship", "container", "cable_car", "subway", "aircraft", "wheelchair", "scooter", "drone", "custom1", "custom2"
+      ],
+      "canChangeRight": [
+        "private", "emergency", "authority", "army", "vip", "pedestrian", "passenger", "hov", "taxi", "bus", "coach", "delivery", "truck", "trailer", "motorcycle", "moped", "bicycle", "evehicle", "tram", "rail_urban", "rail", "rail_electric", "rail_fast", "ship", "container", "cable_car", "subway", "aircraft", "wheelchair", "scooter", "drone", "custom1", "custom2"
+      ],
+      "shape": [
+        {
+          "x": 116.3,
+          "y": 91.44,
+          "z": 0
+        },
+        {
+          "x": 91.44,
+          "y": 116.3,
+          "z": 0
+        }
+      ],
+      "links": [
+        {
+          "lane": "ewo2_0",
+          "direction": "right"
+        }
+      ]
+    }
+  ]
+}
+```
