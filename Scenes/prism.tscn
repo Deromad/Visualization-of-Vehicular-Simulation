@@ -1,10 +1,10 @@
 [gd_scene load_steps=5 format=3 uid="uid://cicflsv8gf2me"]
 
 [ext_resource type="Script" uid="uid://b8opkuxubxavf" path="res://Scripts/prism1.gd" id="1_egbpo"]
-[ext_resource type="Texture2D" uid="uid://dmmhk121dpbme" path="res://Materials/8k_earth_daymap.jpg" id="3_da2n4"]
+[ext_resource type="Texture2D" uid="uid://dj7ohy7t0akp1" path="res://Materials/land_ocean_ice_8192.jpg" id="2_l8jig"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l8jig"]
-albedo_texture = ExtResource("3_da2n4")
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_da2n4"]
+albedo_texture = ExtResource("2_l8jig")
 
 [sub_resource type="SphereMesh" id="SphereMesh_da2n4"]
 lightmap_size_hint = Vector2i(17, 9)
@@ -15,5 +15,5 @@ script = ExtResource("1_egbpo")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
 transform = Transform3D(-1, -8.74228e-08, 3.82137e-15, 0, -4.37114e-08, -1, 8.74228e-08, -1, 4.37114e-08, 0, 0, 0)
-material_override = SubResource("StandardMaterial3D_l8jig")
+material_override = SubResource("StandardMaterial3D_da2n4")
 mesh = SubResource("SphereMesh_da2n4")

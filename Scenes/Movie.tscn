@@ -22,9 +22,9 @@
 [ext_resource type="Script" uid="uid://c3fmpqnvxojio" path="res://Scripts/bubble.gd" id="14_cu08d"]
 [ext_resource type="Script" uid="uid://du8g5n3jpd6jl" path="res://Scripts/polygon.gd" id="15_in6s3"]
 [ext_resource type="Script" uid="uid://dcvvas4c34yl2" path="res://Scripts/marker.gd" id="16_dbjop"]
-[ext_resource type="Texture2D" uid="uid://dmmhk121dpbme" path="res://Materials/8k_earth_daymap.jpg" id="23_fjkid"]
-[ext_resource type="Script" uid="uid://dbfrtqlosfvao" path="res://Scenes/y_achse.gd" id="23_givqa"]
-[ext_resource type="Script" uid="uid://vcjt10akj41k" path="res://Scenes/testing.gd" id="25_r0ss2"]
+[ext_resource type="Script" uid="uid://dbfrtqlosfvao" path="res://Scripts/y_achse.gd" id="23_givqa"]
+[ext_resource type="Script" uid="uid://vcjt10akj41k" path="res://Scripts/testing.gd" id="25_r0ss2"]
+[ext_resource type="Texture2D" uid="uid://dj7ohy7t0akp1" path="res://Materials/land_ocean_ice_8192.jpg" id="26_7lpw8"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7lpw8"]
 disable_ambient_light = true
@@ -33,11 +33,11 @@ albedo_color = Color(0.866699, 0.878582, 0.899989, 1)
 [sub_resource type="PlaneMesh" id="PlaneMesh_uha0q"]
 material = SubResource("StandardMaterial3D_7lpw8")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_givqa"]
-albedo_texture = ExtResource("23_fjkid")
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lhajb"]
+albedo_texture = ExtResource("26_7lpw8")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r0ss2"]
-albedo_texture = ExtResource("23_fjkid")
+albedo_texture = ExtResource("26_7lpw8")
 
 [sub_resource type="SphereMesh" id="SphereMesh_uae15"]
 material = SubResource("StandardMaterial3D_r0ss2")
@@ -105,6 +105,7 @@ script = ExtResource("4_uha0q")
 transform = Transform3D(10000, 0, 0, 0, 10000, 0, 0, 0, 10000, 0, -0.1, 0)
 
 [node name="Groundplane" type="MeshInstance3D" parent="StaticBody3D"]
+visible = false
 mesh = SubResource("PlaneMesh_uha0q")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
@@ -480,7 +481,7 @@ script = ExtResource("23_givqa")
 
 [node name="earth" type="MeshInstance3D" parent="y-achse/x_achse"]
 transform = Transform3D(-1.2742e+07, -1.11394, 4.86919e-08, 0, -0.556969, -1.2742e+07, 1.11394, -1.2742e+07, 0.556971, 0, 0, 0)
-material_override = SubResource("StandardMaterial3D_givqa")
+material_override = SubResource("StandardMaterial3D_lhajb")
 mesh = SubResource("SphereMesh_uae15")
 skeleton = NodePath("../../..")
 

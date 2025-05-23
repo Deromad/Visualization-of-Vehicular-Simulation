@@ -10,7 +10,8 @@ config_version=5
 
 [application]
 
-config/name="Movie ab"
+config/name="VOVSimul"
+config/version="1.0"
 run/main_scene="uid://ba0es51apofms"
 config/features=PackedStringArray("4.4", "C#", "Forward Plus")
 config/icon="res://Icons/icon.svg"
