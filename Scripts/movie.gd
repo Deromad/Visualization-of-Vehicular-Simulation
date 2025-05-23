@@ -1,6 +1,6 @@
 extends Node3D
 
-# References to UI elements and scene nodes 
+# References to UI elements and scene nodes  
 @onready var ErrorPanel = $UI/Error/ErrorLabel           # Label to show error messages
 @onready var Error = $UI/Error                           # Error panel container
 @onready var DynamicObjects = $DynamicObjects            # Parent node for dynamic objects
