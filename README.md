@@ -4,7 +4,7 @@
 This project is an open source simulation and visualization tool for vehicular scenarios using Godot Engine 4.x.
 
 > **License:**  
-Published under either the **BSD-2-Clause** or **MIT License**, at the user’s discretion.  
+Published under either the **BSD-2-Clause** or **MIT License**, at the user’s discretion.   
 **SPDX-License Identifier:** `BSD-2-Clause OR MIT`
 
 ---
