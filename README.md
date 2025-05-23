@@ -110,11 +110,11 @@ Each color is an RGBA object:
   "type": "building_2d5",
   "id": "po_0",
   "shape": [
-    {"x": 140, "y": 140, "z": 0},
-    {"x": 185, "y": 140, "z": 0},
-    {"x": 185, "y": 185, "z": 0},
-    {"x": 140, "y": 185, "z": 0},
-    {"x": 140, "y": 140, "z": 0}
+	{"x": 140, "y": 140, "z": 0},
+	{"x": 185, "y": 140, "z": 0},
+	{"x": 185, "y": 185, "z": 0},
+	{"x": 140, "y": 185, "z": 0},
+	{"x": 140, "y": 140, "z": 0}
   ],
   "color": {"r": 255, "g": 0, "b": 0, "a": 255}
 }
@@ -141,9 +141,9 @@ Represents a junction.
   "type": "junction",
   "id": "J1",
   "shape": [
-    {"x": 190, "y": 190, "z": 0},
-    {"x": 190, "y": 187.5, "z": 0}]},
-    {"x": 187.5, "y": 187.5, "z": 0},
+	{"x": 190, "y": 190, "z": 0},
+	{"x": 190, "y": 187.5, "z": 0}]},
+	{"x": 187.5, "y": 187.5, "z": 0},
   ]
 }
 ```
@@ -183,37 +183,37 @@ Represents road with at least one lane, lanes has to be in order from right to l
   "id": "ed",
   "laneCount": 1,
   "lanes": [
-    {
-      "id": "ed_0",
-      "width": 3.2,
-      "allowedClasses": [
-        "bus"
-      ],
-      "canChangeLeft": [
-        "private", "emergency", "authority", "army", "vip", "pedestrian", "passenger", "hov", "taxi", "bus", "coach", "delivery", "truck", "trailer", "motorcycle", "moped", "bicycle", "evehicle", "tram", "rail_urban", "rail", "rail_electric", "rail_fast", "ship", "container", "cable_car", "subway", "aircraft", "wheelchair", "scooter", "drone", "custom1", "custom2"
-      ],
-      "canChangeRight": [
-        "private", "emergency", "authority", "army", "vip", "pedestrian", "passenger", "hov", "taxi", "bus", "coach", "delivery", "truck", "trailer", "motorcycle", "moped", "bicycle", "evehicle", "tram", "rail_urban", "rail", "rail_electric", "rail_fast", "ship", "container", "cable_car", "subway", "aircraft", "wheelchair", "scooter", "drone", "custom1", "custom2"
-      ],
-      "shape": [
-        {
-          "x": 116.3,
-          "y": 91.44,
-          "z": 0
-        },
-        {
-          "x": 91.44,
-          "y": 116.3,
-          "z": 0
-        }
-      ],
-      "links": [
-        {
-          "lane": "ewo2_0",
-          "direction": "right"
-        }
-      ]
-    }
+	{
+	  "id": "ed_0",
+	  "width": 3.2,
+	  "allowedClasses": [
+		"bus"
+	  ],
+	  "canChangeLeft": [
+		"private", "emergency", "authority", "army", "vip", "pedestrian", "passenger", "hov", "taxi", "bus", "coach", "delivery", "truck", "trailer", "motorcycle", "moped", "bicycle", "evehicle", "tram", "rail_urban", "rail", "rail_electric", "rail_fast", "ship", "container", "cable_car", "subway", "aircraft", "wheelchair", "scooter", "drone", "custom1", "custom2"
+	  ],
+	  "canChangeRight": [
+		"private", "emergency", "authority", "army", "vip", "pedestrian", "passenger", "hov", "taxi", "bus", "coach", "delivery", "truck", "trailer", "motorcycle", "moped", "bicycle", "evehicle", "tram", "rail_urban", "rail", "rail_electric", "rail_fast", "ship", "container", "cable_car", "subway", "aircraft", "wheelchair", "scooter", "drone", "custom1", "custom2"
+	  ],
+	  "shape": [
+		{
+		  "x": 116.3,
+		  "y": 91.44,
+		  "z": 0
+		},
+		{
+		  "x": 91.44,
+		  "y": 116.3,
+		  "z": 0
+		}
+	  ],
+	  "links": [
+		{
+		  "lane": "ewo2_0",
+		  "direction": "right"
+		}
+	  ]
+	}
   ]
 }
 ```
@@ -273,22 +273,22 @@ You have to add a vehicle, update a vehicle in every timestep it exists and at t
   "vclass": "passenger",
   "vshape": "passenger",
   "color": {
-    "r": 255,
-    "g": 255,
-    "b": 0,
-    "a": 255
+	"r": 255,
+	"g": 255,
+	"b": 0,
+	"a": 255
   },
   "length": 5,
   "width": 1.8,
   "height": 1.5,
   "pos": {
-    "x": 129.8,
-    "y": 219.9,
-    "z": 0
+	"x": 129.8,
+	"y": 219.9,
+	"z": 0
   },
   "heading": {
-    "x": 0,
-    "y": -1
+	"x": 0,
+	"y": -1
   }
 }
 ```
@@ -311,13 +311,13 @@ You have to add a vehicle, update a vehicle in every timestep it exists and at t
   "t": 0.2,
   "id": "node[0]",
   "pos": {
-    "x": 20.2,
-    "y": 30.2086,
-    "z": 0
+	"x": 20.2,
+	"y": 30.2086,
+	"z": 0
   },
   "heading": {
-    "x": 6.12323e-17,
-    "y": 1
+	"x": 6.12323e-17,
+	"y": 1
   }
 }
 
@@ -356,9 +356,9 @@ RSUs can also be added, and removed(even though its unlikely that it will be use
   "t": 0,
   "id": "rsu[0]",
   "pos": {
-    "x": 110,
-    "y": 110,
-    "z": 3
+	"x": 110,
+	"y": 110,
+	"z": 3
   }
 }
 ```
@@ -397,10 +397,10 @@ if you want to illustrate a message between vehicles or rsus (or both of them) y
   "t": 20.7002,
   "message": "Car node[10] is rerouting to avoid road eei",
   "color": {
-    "r": 0,
-    "g": 0,
-    "b": 0,
-    "a": 255
+	"r": 0,
+	"g": 0,
+	"b": 0,
+	"a": 255
   }
 }
 
@@ -425,10 +425,10 @@ if you want to illustrate a message between vehicles or rsus (or both of them) y
   "from_id": "node[4]",
   "to_id": "node[10]",
   "color": {
-    "r": 0,
-    "g": 0,
-    "b": 255,
-    "a": 255
+	"r": 0,
+	"g": 0,
+	"b": 255,
+	"a": 255
   }
 }
 ```
@@ -469,10 +469,10 @@ Thes annotations will pop up above the vehicle emojis show emojis and bubbles te
   "to_id": "node[10]",
   "message": "🌟",
   "color": {
-    "r": 255,
-    "g": 0,
-    "b": 0,
-    "a": 255
+	"r": 255,
+	"g": 0,
+	"b": 0,
+	"a": 255
   }
 }
 ```
@@ -495,10 +495,10 @@ Thes annotations will pop up above the vehicle emojis show emojis and bubbles te
   "to_id": "node[4]",
   "message": "stuck",
   "color": {
-    "r": 255,
-    "g": 0,
-    "b": 0,
-    "a": 255
+	"r": 255,
+	"g": 0,
+	"b": 0,
+	"a": 255
   }
 }
 ```
@@ -552,16 +552,16 @@ These annotations will be generated in the world with global positions, they are
   "t": 20.7002,
   "id": "tmp_id_115",
   "shape": [
-    {"x": 137.431, "y": 122.4, "z": 0.1},
-    {"x": 139.431, "y": 122.4, "z": 0.1},
-    {"x": 139.431, "y": 124.4, "z": 0.1},
-    {"x": 137.431, "y": 124.4, "z": 0.1}
+	{"x": 137.431, "y": 122.4, "z": 0.1},
+	{"x": 139.431, "y": 122.4, "z": 0.1},
+	{"x": 139.431, "y": 124.4, "z": 0.1},
+	{"x": 137.431, "y": 124.4, "z": 0.1}
   ],
   "color": {
-    "r": 255,
-    "g": 0,
-    "b": 0,
-    "a": 255
+	"r": 255,
+	"g": 0,
+	"b": 0,
+	"a": 255
   }
 }
 ```
@@ -582,9 +582,9 @@ These annotations will be generated in the world with global positions, they are
   "id": "tmp_id_114",
   "message": "blocked",
   "pos": {
-    "x": 138.431,
-    "y": 123.4,
-    "z": 5
+	"x": 138.431,
+	"y": 123.4,
+	"z": 5
   }
 }
 ```
@@ -639,18 +639,18 @@ Prisms are also an annotation but they basically have to be used as a heatmap fo
   "t": 0,
   "id": "heatmap_0_0",
   "shape": [
-    {"x": 0, "y": 0},
-    {"x": 35.7143, "y": 0},
-    {"x": 35.7143, "y": 35.7143},
-    {"x": 0, "y": 35.7143}
+	{"x": 0, "y": 0},
+	{"x": 35.7143, "y": 0},
+	{"x": 35.7143, "y": 35.7143},
+	{"x": 0, "y": 35.7143}
   ],
   "z_from": -1.1,
   "z_to": 0,
   "color": {
-    "r": 0,
-    "g": 0,
-    "b": 238,
-    "a": 10
+	"r": 0,
+	"g": 0,
+	"b": 238,
+	"a": 10
   }
 }
 ```
@@ -693,27 +693,27 @@ These states cover the typical signaling modes for traffic lights, including sta
   "type": "trafficLight",
   "id": "J0",
   "controlledLinks": {
-    "0": [{"incoming": "eni1_0", "outgoing": "eso_0"}],
-    "1": [{"incoming": "eni1_1", "outgoing": "eso_1"}],
-    "2": [{"incoming": "eni1_1", "outgoing": "eeo_1"}],
-    "3": [{"incoming": "eei_0", "outgoing": "eno_0"}],
-    "4": [{"incoming": "eei_0", "outgoing": "ewo1_0"}],
-    "5": [{"incoming": "eei_1", "outgoing": "ewo1_1"}],
-    "6": [{"incoming": "eei_1", "outgoing": "eso_1"}],
-    "7": [{"incoming": "esi_0", "outgoing": "eeo_0"}],
-    "8": [{"incoming": "esi_0", "outgoing": "eno_0"}],
-    "9": [{"incoming": "esi_1", "outgoing": "eno_1"}],
-    "10": [{"incoming": "esi_1", "outgoing": "ewo1_1"}],
-    "11": [{"incoming": "ef1_0", "outgoing": "ef2_0"}],
-    "12": [{"incoming": "ewi_0", "outgoing": "eso_0"}],
-    "13": [{"incoming": "ewi_0", "outgoing": "eeo_0"}],
-    "14": [{"incoming": "ewi_1", "outgoing": "eeo_1"}],
-    "15": [{"incoming": "ewi_1", "outgoing": "eno_1"}]
+	"0": [{"incoming": "eni1_0", "outgoing": "eso_0"}],
+	"1": [{"incoming": "eni1_1", "outgoing": "eso_1"}],
+	"2": [{"incoming": "eni1_1", "outgoing": "eeo_1"}],
+	"3": [{"incoming": "eei_0", "outgoing": "eno_0"}],
+	"4": [{"incoming": "eei_0", "outgoing": "ewo1_0"}],
+	"5": [{"incoming": "eei_1", "outgoing": "ewo1_1"}],
+	"6": [{"incoming": "eei_1", "outgoing": "eso_1"}],
+	"7": [{"incoming": "esi_0", "outgoing": "eeo_0"}],
+	"8": [{"incoming": "esi_0", "outgoing": "eno_0"}],
+	"9": [{"incoming": "esi_1", "outgoing": "eno_1"}],
+	"10": [{"incoming": "esi_1", "outgoing": "ewo1_1"}],
+	"11": [{"incoming": "ef1_0", "outgoing": "ef2_0"}],
+	"12": [{"incoming": "ewi_0", "outgoing": "eso_0"}],
+	"13": [{"incoming": "ewi_0", "outgoing": "eeo_0"}],
+	"14": [{"incoming": "ewi_1", "outgoing": "eeo_1"}],
+	"15": [{"incoming": "ewi_1", "outgoing": "eno_1"}]
   },
   "state": [
-    "green_major", "green_major", "green_minor", "red", "red", "red", "red",
-    "green_major", "green_major", "green_major", "green_minor", "red", "red",
-    "red", "red", "red"
+	"green_major", "green_major", "green_minor", "red", "red", "red", "red",
+	"green_major", "green_major", "green_major", "green_minor", "red", "red",
+	"red", "red", "red"
   ]
 }
 ```
@@ -732,9 +732,9 @@ These states cover the typical signaling modes for traffic lights, including sta
   "t": 0.1,
   "id": "J0",
   "state": [
-    "green_major", "green_major", "green_minor", "red", "red", "red", "red",
-    "green_major", "green_major", "green_major", "green_minor", "red", "red",
-    "red", "red", "red"
+	"green_major", "green_major", "green_minor", "red", "red", "red", "red",
+	"green_major", "green_major", "green_major", "green_minor", "red", "red",
+	"red", "red", "red"
   ]
 }
 ```
